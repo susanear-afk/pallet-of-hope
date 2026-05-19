@@ -19,9 +19,19 @@ const DATA_FILE    = path.join(__dirname, 'data', 'applications.json');
 const UPLOADS_DIR  = path.join(__dirname, 'uploads');
 const FRONTEND_DIR = path.join(__dirname, '..', 'pallet-of-hope');
 
-// Ensure data file exists
+// Ensure directories and data file exist (critical for cloud hosting like Render)
+const DATA_DIR = path.join(__dirname, 'data');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  console.log('📁 Created data/ directory');
+}
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  console.log('📁 Created uploads/ directory');
+}
 if (!fs.existsSync(DATA_FILE)) {
   fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2));
+  console.log('📄 Created applications.json');
 }
 
 // ---- MIDDLEWARE ----
