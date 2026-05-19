@@ -10,6 +10,27 @@ const fs         = require('fs');
 const multer     = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// ---- CLOUDINARY CONFIG ----
+const cloudinaryConfigured = !!(
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_SECRET &&
+  !process.env.CLOUDINARY_CLOUD_NAME.includes('your-')
+);
+
+if (cloudinaryConfigured) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:    process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+  console.log('☁️  Cloudinary configured — documents will be stored in the cloud');
+} else {
+  console.log('📁 Cloudinary not configured — documents stored locally');
+}
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -116,19 +137,6 @@ app.use('/api/stats', (req, res, next) => {
 });
 
 // ---- FILE UPLOAD CONFIG ----
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Each application gets its own subfolder, set after appId is generated
-    const dir = path.join(UPLOADS_DIR, req.appId || 'temp');
-    fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const safe = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
-    cb(null, Date.now() + '_' + safe);
-  }
-});
-
 const fileFilter = (req, file, cb) => {
   const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg',
                    'application/msword',
@@ -136,6 +144,32 @@ const fileFilter = (req, file, cb) => {
   if (allowed.includes(file.mimetype)) cb(null, true);
   else cb(new Error('Invalid file type. Allowed: PDF, JPG, PNG, DOC, DOCX'), false);
 };
+
+// Use Cloudinary storage if configured, otherwise fall back to local disk
+let storage;
+if (cloudinaryConfigured) {
+  storage = new CloudinaryStorage({
+    cloudinary,
+    params: async (req, file) => ({
+      folder:         `the-giving-pallet/${req.appId || 'temp'}`,
+      public_id:      Date.now() + '_' + file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_'),
+      resource_type:  'auto',
+      allowed_formats: ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'],
+    }),
+  });
+} else {
+  storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      const dir = path.join(UPLOADS_DIR, req.appId || 'temp');
+      fs.mkdirSync(dir, { recursive: true });
+      cb(null, dir);
+    },
+    filename: (req, file, cb) => {
+      const safe = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
+      cb(null, Date.now() + '_' + safe);
+    }
+  });
+}
 
 const upload = multer({
   storage,
@@ -241,10 +275,13 @@ app.post('/api/apply', (req, res, next) => {
       },
       documents: files.map(f => ({
         originalName: f.originalname,
-        savedName:    f.filename,
-        path:         f.path,
-        size:         f.size,
+        savedName:    f.filename || f.public_id || '',
+        path:         f.path || '',
+        url:          f.path && f.path.startsWith('http') ? f.path : (f.secure_url || f.url || ''),
+        cloudinaryId: f.public_id || '',
+        size:         f.size || 0,
         mimetype:     f.mimetype,
+        storage:      cloudinaryConfigured ? 'cloudinary' : 'local',
       })),
       consent: {
         accurate: body.consentAccurate === 'true',

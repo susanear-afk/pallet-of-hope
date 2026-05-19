@@ -485,13 +485,18 @@ async function openModal(id) {
       <div class="modal-section">
         <h3>Documents (${a.documents.length})</h3>
         ${a.documents.length > 0
-          ? a.documents.map(d => `
-              <div class="doc-item">
-                <span>${d.mimetype.includes('pdf') ? '📄' : d.mimetype.includes('image') ? '🖼️' : '📋'}</span>
-                <span style="flex:1;font-weight:500">${d.originalName}</span>
-                <span style="color:var(--text-light);font-size:0.8rem">${(d.size/1024).toFixed(0)} KB</span>
-                <a href="/uploads/${a.id}/${d.savedName}" target="_blank" style="color:var(--orange);font-size:0.85rem;text-decoration:none">View ↗</a>
-              </div>`).join('')
+          ? a.documents.map(d => {
+              const icon = d.mimetype && d.mimetype.includes('pdf') ? '📄' : d.mimetype && d.mimetype.includes('image') ? '🖼️' : '📋';
+              const viewUrl = d.url || (d.savedName ? '/uploads/' + a.id + '/' + d.savedName : null);
+              const sizeKb = d.size ? (d.size/1024).toFixed(0) + ' KB' : '';
+              const storageTag = d.storage === 'cloudinary' ? '<span style="font-size:0.7rem;background:#EBF2FA;color:#2B5B8A;padding:2px 7px;border-radius:10px;margin-left:6px">☁️ Cloud</span>' : '';
+              return \`<div class="doc-item">
+                <span>\${icon}</span>
+                <span style="flex:1;font-weight:500">\${d.originalName}\${storageTag}</span>
+                <span style="color:var(--text-light);font-size:0.8rem">\${sizeKb}</span>
+                \${viewUrl ? \`<a href="\${viewUrl}" target="_blank" style="color:var(--orange);font-size:0.85rem;text-decoration:none">View ↗</a>\` : ''}
+              </div>\`;
+            }).join('')
           : '<p style="color:var(--text-light);font-size:0.9rem">No files uploaded</p>'}
         ${a.declaration.selfDeclare ? `
           <div class="story-block" style="margin-top:12px"><label>Self-Declaration</label><p>${a.declaration.selfDeclareText}</p></div>` : ''}
