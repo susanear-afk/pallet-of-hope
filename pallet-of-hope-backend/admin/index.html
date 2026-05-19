@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — The Giving Pallet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #E8621A; --orange-pale: #FFF0E8;
+      --dark: #1C1008; --cream: #FDF8F3;
+      --border: #E8DDD5; --text: #2D1F14; --text-light: #7A6558;
+      --green: #2D7A4F; --green-pale: #EBF8F0;
+      --blue: #2B5B8A; --blue-pale: #EBF2FA;
+      --yellow: #9A6B00; --yellow-pale: #FFF8E1;
+      --red: #C53030; --red-pale: #FFF5F5;
+      --radius: 10px; --shadow: 0 2px 12px rgba(28,16,8,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #F5F0EB; color: var(--text); display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px; background: var(--dark); padding: 0; display: flex;
+      flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 10;
+    }
+    .sidebar-logo {
+      padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: 'Playfair Display', serif; font-size: 1rem; color: white;
+    }
+    .sidebar-logo span { color: var(--orange); }
+    .sidebar-logo small { display: block; color: rgba(255,255,255,0.3); font-family: 'DM Sans', sans-serif; font-size: 0.72rem; margin-top: 2px; font-weight: 400; }
+    .sidebar-nav { padding: 16px 0; flex: 1; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 11px 20px;
+      color: rgba(255,255,255,0.5); font-size: 0.9rem; cursor: pointer;
+      transition: all 0.2s; border-left: 3px solid transparent;
+    }
+    .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+    .nav-item.active { color: white; background: rgba(232,98,26,0.15); border-left-color: var(--orange); }
+    .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-footer a { color: rgba(255,255,255,0.3); font-size: 0.8rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--orange); }
+
+    /* MAIN */
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar {
+      background: white; padding: 0 32px; height: 64px; display: flex; align-items: center;
+      justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5;
+    }
+    .topbar h1 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--dark); }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .refresh-btn {
+      background: none; border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 7px 14px; font-size: 0.85rem; cursor: pointer; color: var(--text-light);
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .refresh-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .content { padding: 32px; flex: 1; }
+
+    /* PANELS */
+    .panel { display: none; }
+    .panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* STATS GRID */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .stat-card {
+      background: white; border-radius: var(--radius); padding: 20px 24px;
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+    }
+    .stat-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-light); margin-bottom: 8px; }
+    .stat-value { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--dark); }
+    .stat-card.orange .stat-value { color: var(--orange); }
+    .stat-card.green  .stat-value { color: var(--green); }
+    .stat-card.blue   .stat-value { color: var(--blue); }
+    .stat-card.yellow .stat-value { color: var(--yellow); }
+    .stat-card.red    .stat-value { color: var(--red); }
+
+    /* FILTERS */
+    .filters { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+    .filter-btn {
+      padding: 7px 16px; border-radius: 100px; font-size: 0.85rem; font-weight: 500;
+      border: 1.5px solid var(--border); background: white; cursor: pointer; color: var(--text-light);
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .filter-btn.active { background: var(--orange); color: white; border-color: var(--orange); }
+    .search-input {
+      padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text);
+      background: white; width: 220px; outline: none;
+    }
+    .search-input:focus { border-color: var(--orange); }
+
+    /* TABLE */
+    .table-wrap { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { padding: 12px 16px; text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); background: var(--cream); border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--cream); }
+    tbody td { padding: 13px 16px; font-size: 0.9rem; color: var(--text); }
+    .cell-name { font-weight: 600; color: var(--dark); }
+    .cell-id { font-size: 0.8rem; color: var(--text-light); font-family: monospace; }
+    .cell-date { font-size: 0.85rem; color: var(--text-light); }
+
+    /* STATUS BADGES */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
+    .badge-pending    { background: var(--yellow-pale); color: var(--yellow); }
+    .badge-approved   { background: var(--green-pale);  color: var(--green); }
+    .badge-waitlisted { background: var(--blue-pale);   color: var(--blue); }
+    .badge-declined   { background: var(--red-pale);    color: var(--red); }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(28,16,8,0.5);
+      z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white; border-radius: 16px; width: 100%; max-width: 780px;
+      max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+      animation: fadeIn 0.25s ease;
+    }
+    .modal-header {
+      padding: 24px 28px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-start; position: sticky; top: 0; background: white; z-index: 2;
+    }
+    .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--dark); }
+    .modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--text-light); transition: color 0.2s; }
+    .modal-close:hover { color: var(--red); }
+    .modal-body { padding: 28px; }
+    .modal-section { margin-bottom: 28px; }
+    .modal-section h3 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .detail-item label { font-size: 0.78rem; color: var(--text-light); font-weight: 600; display: block; margin-bottom: 2px; }
+    .detail-item p { font-size: 0.92rem; color: var(--dark); }
+    .story-block { background: var(--cream); border-left: 3px solid var(--orange); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 14px; }
+    .story-block label { font-size: 0.78rem; color: var(--text-light); font-weight: 600; display: block; margin-bottom: 6px; }
+    .story-block p { font-size: 0.92rem; color: var(--dark); line-height: 1.7; }
+    .doc-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--cream); border-radius: 8px; margin-bottom: 8px; font-size: 0.88rem; }
+
+    /* STATUS UPDATE */
+    .status-update { background: var(--cream); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); }
+    .status-update h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; color: var(--dark); }
+    .status-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .status-btn {
+      padding: 8px 18px; border-radius: 100px; font-size: 0.85rem; font-weight: 600;
+      border: 2px solid; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .status-btn.pending    { border-color: var(--yellow); color: var(--yellow); background: white; }
+    .status-btn.approved   { border-color: var(--green);  color: var(--green);  background: white; }
+    .status-btn.waitlisted { border-color: var(--blue);   color: var(--blue);   background: white; }
+    .status-btn.declined   { border-color: var(--red);    color: var(--red);    background: white; }
+    .status-btn.active.pending    { background: var(--yellow-pale); }
+    .status-btn.active.approved   { background: var(--green-pale); }
+    .status-btn.active.waitlisted { background: var(--blue-pale); }
+    .status-btn.active.declined   { background: var(--red-pale); }
+    .notes-input {
+      width: 100%; padding: 10px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; resize: vertical; min-height: 80px; outline: none;
+    }
+    .notes-input:focus { border-color: var(--orange); }
+    .save-btn {
+      background: var(--orange); color: white; border: none; padding: 10px 24px;
+      border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; margin-top: 12px; transition: all 0.2s;
+    }
+    .save-btn:hover { background: #F97B3D; }
+    .save-success { color: var(--green); font-size: 0.85rem; margin-top: 8px; display: none; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
+    .empty-state .ei { font-size: 3rem; margin-bottom: 16px; }
+
+    /* SCORE PANEL */
+    .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .score-item { background: var(--cream); border-radius: 8px; padding: 14px; }
+    .score-item label { font-size: 0.78rem; color: var(--text-light); font-weight: 600; display: block; margin-bottom: 8px; }
+    .score-stars { display: flex; gap: 4px; }
+    .star { font-size: 1.3rem; cursor: pointer; transition: transform 0.1s; }
+    .star:hover { transform: scale(1.2); }
+    .score-total { background: var(--orange-pale); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; margin-top: 16px; }
+    .score-total .score-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--orange); }
+    .score-total .score-max { font-size: 0.85rem; color: var(--text-light); }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    🧡 The Giving <span>Pallet</span>
+    <small>Admin Dashboard</small>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="showPanel('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPanel('applications')">
+      <span class="nav-icon">📋</span> Applications
+    </div>
+    <div class="nav-item" onclick="showPanel('approved')">
+      <span class="nav-icon">✅</span> Approved
+    </div>
+    <div class="nav-item" onclick="showPanel('waitlist')">
+      <span class="nav-icon">⏳</span> Waitlist
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="/" target="_blank">← View Website</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="panelTitle">Dashboard</h1>
+    <div class="topbar-right">
+      <button class="refresh-btn" onclick="loadData()">⟳ Refresh</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD PANEL -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Total Applications</div><div class="stat-value" id="stat-total">—</div></div>
+        <div class="stat-card yellow"><div class="stat-label">Pending Review</div><div class="stat-value" id="stat-pending">—</div></div>
+        <div class="stat-card green"><div class="stat-label">Approved</div><div class="stat-value" id="stat-approved">—</div></div>
+        <div class="stat-card blue"><div class="stat-label">Waitlisted</div><div class="stat-value" id="stat-waitlisted">—</div></div>
+        <div class="stat-card red"><div class="stat-label">Declined</div><div class="stat-value" id="stat-declined">—</div></div>
+        <div class="stat-card orange"><div class="stat-label">This Month</div><div class="stat-value" id="stat-month">—</div></div>
+      </div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:16px;color:var(--dark)">Recent Applications</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Applicant</th><th>Family Type</th><th>Submitted</th><th>Status</th>
+          </tr></thead>
+          <tbody id="recent-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- APPLICATIONS PANEL -->
+    <div class="panel" id="panel-applications">
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('pending', this)">Pending</button>
+        <button class="filter-btn" onclick="setFilter('approved', this)">Approved</button>
+        <button class="filter-btn" onclick="setFilter('waitlisted', this)">Waitlisted</button>
+        <button class="filter-btn" onclick="setFilter('declined', this)">Declined</button>
+        <input class="search-input" type="text" id="searchInput" placeholder="Search name or email…" oninput="renderTable()"/>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>ID</th><th>Applicant</th><th>Location</th><th>Family Type</th><th>Docs</th><th>Submitted</th><th>Status</th>
+          </tr></thead>
+          <tbody id="main-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- APPROVED PANEL -->
+    <div class="panel" id="panel-approved">
+      <p style="color:var(--text-light);margin-bottom:20px;">Families approved to receive a pallet of clothing.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Applicant</th><th>Email</th><th>Phone</th><th>Location</th><th>Reviewed</th></tr></thead>
+          <tbody id="approved-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- WAITLIST PANEL -->
+    <div class="panel" id="panel-waitlist">
+      <p style="color:var(--text-light);margin-bottom:20px;">Families on the waitlist for the next distribution cycle.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Applicant</th><th>Email</th><th>Location</th><th>Submitted</th></tr></thead>
+          <tbody id="waitlist-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- APPLICATION MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalName">Applicant</h2>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+          <span class="cell-id" id="modalId"></span>
+          <span class="badge" id="modalBadge"></span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ================================
+// ADMIN DASHBOARD JS
+// ================================
+
+const API = '';  // same origin
+let allApplications = [];
+let currentFilter = 'all';
+let currentAppId = null;
+let scores = {};
+
+async function loadData() {
+  try {
+    const [statsRes, appsRes] = await Promise.all([
+      fetch(API + '/api/stats'),
+      fetch(API + '/api/applications')
+    ]);
+    const statsData = await statsRes.json();
+    const appsData  = await appsRes.json();
+
+    if (statsData.success) {
+      const s = statsData.stats;
+      document.getElementById('stat-total').textContent     = s.total;
+      document.getElementById('stat-pending').textContent   = s.pending;
+      document.getElementById('stat-approved').textContent  = s.approved;
+      document.getElementById('stat-waitlisted').textContent = s.waitlisted;
+      document.getElementById('stat-declined').textContent  = s.declined;
+      document.getElementById('stat-month').textContent     = s.thisMonth;
+    }
+
+    if (appsData.success) {
+      allApplications = appsData.applications;
+      renderTable();
+      renderRecent();
+      renderApproved();
+      renderWaitlist();
+    }
+  } catch (err) {
+    console.error('Failed to load data:', err);
+  }
+}
+
+function renderRecent() {
+  const tbody = document.getElementById('recent-tbody');
+  const recent = [...allApplications].sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt)).slice(0, 8);
+  if (!recent.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-light)">No applications yet</td></tr>'; return; }
+  tbody.innerHTML = recent.map(a => `
+    <tr onclick="openModal('${a.id}')">
+      <td><div class="cell-name">${a.name}</div><div style="font-size:0.8rem;color:var(--text-light)">${a.email}</div></td>
+      <td>${formatFamilyType(a.familyType)}</td>
+      <td class="cell-date">${formatDate(a.submittedAt)}</td>
+      <td><span class="badge badge-${a.status}">${capitalize(a.status)}</span></td>
+    </tr>`).join('');
+}
+
+function renderTable() {
+  const tbody = document.getElementById('main-tbody');
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let filtered = allApplications.filter(a => {
+    const matchStatus = currentFilter === 'all' || a.status === currentFilter;
+    const matchSearch = !search || a.name.toLowerCase().includes(search) || a.email.toLowerCase().includes(search);
+    return matchStatus && matchSearch;
+  }).sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-light)">No applications found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(a => `
+    <tr onclick="openModal('${a.id}')">
+      <td class="cell-id">${a.id}</td>
+      <td><div class="cell-name">${a.name}</div><div style="font-size:0.8rem;color:var(--text-light)">${a.email}</div></td>
+      <td style="font-size:0.85rem">${a.city}</td>
+      <td style="font-size:0.85rem">${formatFamilyType(a.familyType)}</td>
+      <td style="font-size:0.85rem">📄 ${a.numDocs}</td>
+      <td class="cell-date">${formatDate(a.submittedAt)}</td>
+      <td><span class="badge badge-${a.status}">${capitalize(a.status)}</span></td>
+    </tr>`).join('');
+}
+
+function renderApproved() {
+  const tbody = document.getElementById('approved-tbody');
+  const apps = allApplications.filter(a => a.status === 'approved').sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  if (!apps.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-light)">No approved applications yet</td></tr>'; return; }
+  tbody.innerHTML = apps.map(a => `
+    <tr onclick="openModal('${a.id}')">
+      <td class="cell-id">${a.id}</td>
+      <td class="cell-name">${a.name}</td>
+      <td style="font-size:0.85rem">${a.email}</td>
+      <td style="font-size:0.85rem">—</td>
+      <td style="font-size:0.85rem">${a.city}</td>
+      <td class="cell-date">${formatDate(a.submittedAt)}</td>
+    </tr>`).join('');
+}
+
+function renderWaitlist() {
+  const tbody = document.getElementById('waitlist-tbody');
+  const apps = allApplications.filter(a => a.status === 'waitlisted').sort((a,b) => new Date(a.submittedAt) - new Date(b.submittedAt));
+  if (!apps.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-light)">No waitlisted applications</td></tr>'; return; }
+  tbody.innerHTML = apps.map(a => `
+    <tr onclick="openModal('${a.id}')">
+      <td class="cell-id">${a.id}</td>
+      <td class="cell-name">${a.name}</td>
+      <td style="font-size:0.85rem">${a.email}</td>
+      <td style="font-size:0.85rem">${a.city}</td>
+      <td class="cell-date">${formatDate(a.submittedAt)}</td>
+    </tr>`).join('');
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+// ---- MODAL ----
+
+async function openModal(id) {
+  currentAppId = id;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('modalBody').innerHTML = '<p style="padding:20px;color:var(--text-light)">Loading…</p>';
+
+  try {
+    const res = await fetch(API + '/api/applications/' + id);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    const a = data.application;
+
+    document.getElementById('modalName').textContent = `${a.contact.firstName} ${a.contact.lastName}`;
+    document.getElementById('modalId').textContent = a.id;
+    const badge = document.getElementById('modalBadge');
+    badge.textContent = capitalize(a.status);
+    badge.className = `badge badge-${a.status}`;
+
+    const benefits = Array.isArray(a.family.benefits) ? a.family.benefits.join(', ') : a.family.benefits || 'None';
+    const sc = scores[id] || { need:0, barriers:0, motivation:0, impact:0 };
+
+    document.getElementById('modalBody').innerHTML = `
+
+      <div class="modal-section">
+        <h3>Contact Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item"><label>Full Name</label><p>${a.contact.firstName} ${a.contact.lastName}</p></div>
+          <div class="detail-item"><label>Email</label><p>${a.contact.email}</p></div>
+          <div class="detail-item"><label>Phone</label><p>${a.contact.phone}</p></div>
+          <div class="detail-item"><label>Location</label><p>${a.contact.city}, ${a.contact.zip}</p></div>
+          <div class="detail-item"><label>Submitted</label><p>${formatDate(a.submittedAt, true)}</p></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Family Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item"><label>Applying As</label><p>${formatFamilyType(a.family.type)}</p></div>
+          <div class="detail-item"><label>Number of Children</label><p>${a.family.numChildren}</p></div>
+          <div class="detail-item"><label>Children's Ages</label><p>${a.family.childrenAges}</p></div>
+          <div class="detail-item"><label>Diagnosis / Special Needs</label><p>${a.family.diagnosisType || 'Not provided'}</p></div>
+          <div class="detail-item"><label>Employment Status</label><p>${a.family.employmentStatus}</p></div>
+          <div class="detail-item"><label>Monthly Income</label><p>$${a.family.monthlyIncome}</p></div>
+          <div class="detail-item" style="grid-column:1/-1"><label>Benefits Received</label><p>${benefits}</p></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Personal Statement</h3>
+        <div class="story-block"><label>Daily Life & Caregiving</label><p>${a.story.dailyLife}</p></div>
+        <div class="story-block"><label>Employment Barriers</label><p>${a.story.employmentBarriers}</p></div>
+        <div class="story-block"><label>Why They Want to Resell</label><p>${a.story.resellerWhy}</p></div>
+        <div class="story-block"><label>What a Pallet Would Mean</label><p>${a.story.palletMeaning}</p></div>
+        ${a.story.resellerExperience ? `<div class="story-block"><label>Prior Reselling Experience</label><p>${a.story.resellerExperience}</p></div>` : ''}
+      </div>
+
+      <div class="modal-section">
+        <h3>Documents (${a.documents.length})</h3>
+        ${a.documents.length > 0
+          ? a.documents.map(d => `
+              <div class="doc-item">
+                <span>${d.mimetype.includes('pdf') ? '📄' : d.mimetype.includes('image') ? '🖼️' : '📋'}</span>
+                <span style="flex:1;font-weight:500">${d.originalName}</span>
+                <span style="color:var(--text-light);font-size:0.8rem">${(d.size/1024).toFixed(0)} KB</span>
+                <a href="/uploads/${a.id}/${d.savedName}" target="_blank" style="color:var(--orange);font-size:0.85rem;text-decoration:none">View ↗</a>
+              </div>`).join('')
+          : '<p style="color:var(--text-light);font-size:0.9rem">No files uploaded</p>'}
+        ${a.declaration.selfDeclare ? `
+          <div class="story-block" style="margin-top:12px"><label>Self-Declaration</label><p>${a.declaration.selfDeclareText}</p></div>` : ''}
+      </div>
+
+      <div class="modal-section">
+        <h3>Scoring Rubric</h3>
+        <div class="score-grid">
+          ${scoreRow('need', 'Level of Financial Need', sc.need)}
+          ${scoreRow('barriers', 'Caregiving Barriers to Employment', sc.barriers)}
+          ${scoreRow('motivation', 'Motivation & Reseller Commitment', sc.motivation)}
+          ${scoreRow('impact', 'Clarity of Impact on Family', sc.impact)}
+        </div>
+        <div class="score-total">
+          <div class="score-num" id="scoreTotal">${sc.need + sc.barriers + sc.motivation + sc.impact}</div>
+          <div class="score-max">out of 20 points</div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Review Decision</h3>
+        <div class="status-update">
+          <div class="status-row">
+            ${['pending','approved','waitlisted','declined'].map(s => `
+              <button class="status-btn ${s} ${a.status === s ? 'active' : ''}" id="sbtn-${s}" onclick="selectStatus('${s}')">${capitalize(s)}</button>
+            `).join('')}
+          </div>
+          <label style="font-size:0.85rem;font-weight:600;color:var(--dark);display:block;margin-bottom:6px">Review Notes</label>
+          <textarea class="notes-input" id="reviewNotes" placeholder="Add internal notes about this application…">${a.reviewNotes || ''}</textarea>
+          <button class="save-btn" onclick="saveStatus('${a.id}')">Save Decision</button>
+          <div class="save-success" id="saveSuccess">✅ Decision saved successfully!</div>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    document.getElementById('modalBody').innerHTML = `<p style="color:red;padding:20px">Error loading application: ${err.message}</p>`;
+  }
+}
+
+function scoreRow(key, label, value) {
+  return `
+    <div class="score-item">
+      <label>${label}</label>
+      <div class="score-stars" id="stars-${key}">
+        ${[1,2,3,4,5].map(i => `<span class="star" onclick="setScore('${key}',${i})">${i <= value ? '⭐' : '☆'}</span>`).join('')}
+      </div>
+    </div>`;
+}
+
+function setScore(key, val) {
+  if (!scores[currentAppId]) scores[currentAppId] = {need:0,barriers:0,motivation:0,impact:0};
+  scores[currentAppId][key] = val;
+  const stars = document.getElementById('stars-' + key);
+  stars.querySelectorAll('.star').forEach((s, i) => { s.textContent = i < val ? '⭐' : '☆'; });
+  const sc = scores[currentAppId];
+  document.getElementById('scoreTotal').textContent = sc.need + sc.barriers + sc.motivation + sc.impact;
+}
+
+let selectedStatus = null;
+function selectStatus(s) {
+  selectedStatus = s;
+  ['pending','approved','waitlisted','declined'].forEach(st => {
+    const btn = document.getElementById('sbtn-' + st);
+    if (btn) { btn.classList.toggle('active', st === s); }
+  });
+}
+
+async function saveStatus(id) {
+  const status = selectedStatus || document.querySelector('.status-btn.active')?.classList[1];
+  const notes  = document.getElementById('reviewNotes').value;
+  if (!status) return;
+  try {
+    const res = await fetch(API + '/api/applications/' + id + '/status', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, reviewNotes: notes })
+    });
+    const data = await res.json();
+    if (data.success) {
+      const succ = document.getElementById('saveSuccess');
+      succ.style.display = 'block';
+      setTimeout(() => { succ.style.display = 'none'; }, 3000);
+      // Update local data
+      const idx = allApplications.findIndex(a => a.id === id);
+      if (idx !== -1) { allApplications[idx].status = status; }
+      renderTable(); renderRecent(); renderApproved(); renderWaitlist();
+      // Update badge in modal
+      const badge = document.getElementById('modalBadge');
+      badge.textContent = capitalize(status);
+      badge.className = `badge badge-${status}`;
+    }
+  } catch (err) { alert('Error saving: ' + err.message); }
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  currentAppId = null;
+  selectedStatus = null;
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+// ---- PANELS ----
+const panelTitles = { dashboard: 'Dashboard', applications: 'All Applications', approved: 'Approved Families', waitlist: 'Waitlist' };
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelector(`[onclick="showPanel('${name}')"]`).classList.add('active');
+  document.getElementById('panelTitle').textContent = panelTitles[name] || name;
+}
+
+// ---- UTILS ----
+function formatDate(iso, long = false) {
+  const d = new Date(iso);
+  if (long) return d.toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+function formatFamilyType(t) {
+  if (!t) return '—';
+  return t.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// Init
+loadData();
+setInterval(loadData, 30000); // auto-refresh every 30s
+</script>
+</body>
+</html>

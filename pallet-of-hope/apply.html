@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Apply — The Giving Pallet Foundation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="apply-page">
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="logo">
+        <a href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;">
+          <span class="logo-icon">🧡</span>
+          <span class="logo-text">The Giving <strong>Pallet</strong></span>
+        </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#how-it-works">How It Works</a></li>
+        <li><a href="index.html#mission">Mission</a></li>
+        <li><a href="apply.html" class="nav-cta active">Apply Now</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- APPLY HERO -->
+  <section class="apply-hero">
+    <div class="container">
+      <span class="section-label">Application</span>
+      <h1>Apply for a Giving Pallet</h1>
+      <p class="apply-subtitle">There are no wrong answers here. We just want to know your heart and your story. Every application is read by a real person with care and compassion.</p>
+      <div class="apply-note">
+        <strong>📋 Before you begin:</strong> Have one verification document ready to upload (IEP, SSI letter, EBT card, doctor's letter, tax return, or self-declaration). Applications are reviewed within 5–7 business days.
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="apply-form-section">
+    <div class="container">
+      <div class="form-wrapper" id="formWrapper">
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-bar-wrap">
+          <div class="progress-steps">
+            <div class="progress-step active" data-step="1">
+              <div class="ps-circle">1</div>
+              <div class="ps-label">Your Info</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="2">
+              <div class="ps-circle">2</div>
+              <div class="ps-label">Your Family</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="3">
+              <div class="ps-circle">3</div>
+              <div class="ps-label">Your Story</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="4">
+              <div class="ps-circle">4</div>
+              <div class="ps-label">Documents</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="5">
+              <div class="ps-circle">5</div>
+              <div class="ps-label">Review</div>
+            </div>
+          </div>
+        </div>
+
+        <form id="applicationForm" novalidate>
+
+          <!-- STEP 1: CONTACT INFO -->
+          <div class="form-step active" id="step1">
+            <h2 class="step-title">Let's Start with You</h2>
+            <p class="step-desc">Basic contact information so we can reach you about your application.</p>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="firstName">First Name <span class="req">*</span></label>
+                <input type="text" id="firstName" name="firstName" placeholder="Your first name" required/>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name <span class="req">*</span></label>
+                <input type="text" id="lastName" name="lastName" placeholder="Your last name" required/>
+              </div>
+              <div class="form-group full">
+                <label for="email">Email Address <span class="req">*</span></label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required/>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number <span class="req">*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" required/>
+              </div>
+              <div class="form-group">
+                <label for="zip">ZIP Code <span class="req">*</span></label>
+                <input type="text" id="zip" name="zip" placeholder="90001" required maxlength="10"/>
+              </div>
+              <div class="form-group full">
+                <label for="city">City & State <span class="req">*</span></label>
+                <input type="text" id="city" name="city" placeholder="Los Angeles, CA" required/>
+              </div>
+            </div>
+            <div class="form-nav">
+              <div></div>
+              <button type="button" class="btn-next" onclick="nextStep(1)">Next: Your Family →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: FAMILY INFO -->
+          <div class="form-step" id="step2">
+            <h2 class="step-title">Tell Us About Your Family</h2>
+            <p class="step-desc">Help us understand your household and caregiving situation.</p>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label for="familyType">I am applying as a: <span class="req">*</span></label>
+                <select id="familyType" name="familyType" required>
+                  <option value="">— Select one —</option>
+                  <option value="single-parent-autism">Single parent of a child with autism</option>
+                  <option value="single-parent-special-needs">Single parent of a child with other special needs</option>
+                  <option value="two-parent-autism">Two-parent household with a child with autism</option>
+                  <option value="two-parent-special-needs">Two-parent household with a child with special needs</option>
+                  <option value="single-parent-low-income">Single parent (low income, no special needs diagnosis)</option>
+                  <option value="other">Other (please describe in your story)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="numChildren">Number of Children in Household <span class="req">*</span></label>
+                <input type="number" id="numChildren" name="numChildren" min="1" max="20" placeholder="e.g. 2" required/>
+              </div>
+              <div class="form-group">
+                <label for="childrenAges">Children's Ages <span class="req">*</span></label>
+                <input type="text" id="childrenAges" name="childrenAges" placeholder="e.g. 4, 7, 12" required/>
+              </div>
+              <div class="form-group full">
+                <label for="diagnosisType">Diagnosis / Special Needs Type (if applicable)</label>
+                <input type="text" id="diagnosisType" name="diagnosisType" placeholder="e.g. Autism Spectrum Disorder, ADHD, Down Syndrome"/>
+                <span class="field-hint">You are not required to share this — only if comfortable and applicable.</span>
+              </div>
+              <div class="form-group full">
+                <label for="employmentStatus">Current Employment Status <span class="req">*</span></label>
+                <select id="employmentStatus" name="employmentStatus" required>
+                  <option value="">— Select one —</option>
+                  <option value="unemployed">Unemployed / Not currently working</option>
+                  <option value="part-time">Part-time employment</option>
+                  <option value="full-time">Full-time employment</option>
+                  <option value="self-employed">Self-employed / Gig work</option>
+                  <option value="on-assistance">Receiving government assistance</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label for="monthlyIncome">Approximate Monthly Household Income <span class="req">*</span></label>
+                <select id="monthlyIncome" name="monthlyIncome" required>
+                  <option value="">— Select one —</option>
+                  <option value="0-1000">$0 – $1,000</option>
+                  <option value="1001-2000">$1,001 – $2,000</option>
+                  <option value="2001-3000">$2,001 – $3,000</option>
+                  <option value="3001-4000">$3,001 – $4,000</option>
+                  <option value="4001+">Over $4,000</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label>Do you currently receive any of the following? (check all that apply)</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-label"><input type="checkbox" name="benefits" value="ebt"> EBT / CalFresh / SNAP</label>
+                  <label class="checkbox-label"><input type="checkbox" name="benefits" value="medicaid"> Medi-Cal / Medicaid</label>
+                  <label class="checkbox-label"><input type="checkbox" name="benefits" value="ssi"> SSI / SSDI</label>
+                  <label class="checkbox-label"><input type="checkbox" name="benefits" value="housing"> Section 8 / Housing Assistance</label>
+                  <label class="checkbox-label"><input type="checkbox" name="benefits" value="none"> None of the above</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-nav">
+              <button type="button" class="btn-back" onclick="prevStep(2)">← Back</button>
+              <button type="button" class="btn-next" onclick="nextStep(2)">Next: Your Story →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: PERSONAL STATEMENT -->
+          <div class="form-step" id="step3">
+            <h2 class="step-title">Your Story Matters</h2>
+            <p class="step-desc">This is the most important part of your application. Please take your time. There are no wrong answers — we just want to hear your heart.</p>
+
+            <div class="form-group full story-group">
+              <label for="dailyLife">1. Tell us about your family situation. Who are you caring for and what does your daily life look like? <span class="req">*</span></label>
+              <textarea id="dailyLife" name="dailyLife" rows="5" placeholder="Share as much or as little as you're comfortable with. We want to understand your world..." required></textarea>
+              <span class="char-count" id="count1">0 / 1000</span>
+            </div>
+
+            <div class="form-group full story-group">
+              <label for="employmentBarriers">2. What barriers have prevented you from finding or keeping traditional employment? <span class="req">*</span></label>
+              <textarea id="employmentBarriers" name="employmentBarriers" rows="5" placeholder="Be honest — we understand how demanding caregiving can be and how it conflicts with regular work schedules..." required></textarea>
+              <span class="char-count" id="count2">0 / 1000</span>
+            </div>
+
+            <div class="form-group full story-group">
+              <label for="resellerWhy">3. Why do you want to become a reseller, and how would it change your family's life? <span class="req">*</span></label>
+              <textarea id="resellerWhy" name="resellerWhy" rows="5" placeholder="Tell us your vision — what does financial independence look like for your family?..." required></textarea>
+              <span class="char-count" id="count3">0 / 1000</span>
+            </div>
+
+            <div class="form-group full story-group">
+              <label for="palletMeaning">4. What would receiving a pallet of clothing mean to you and your family right now? <span class="req">*</span></label>
+              <textarea id="palletMeaning" name="palletMeaning" rows="5" placeholder="We want to understand the impact this would have on your life right now..." required></textarea>
+              <span class="char-count" id="count4">0 / 1000</span>
+            </div>
+
+            <div class="form-group full story-group">
+              <label for="resellerExperience">5. Do you have any prior experience with reselling, selling online, or running a small business? (Optional)</label>
+              <textarea id="resellerExperience" name="resellerExperience" rows="3" placeholder="No experience needed — but share if you have any! eBay, Poshmark, Facebook Marketplace, garage sales, etc."></textarea>
+            </div>
+
+            <div class="form-nav">
+              <button type="button" class="btn-back" onclick="prevStep(3)">← Back</button>
+              <button type="button" class="btn-next" onclick="nextStep(3)">Next: Documents →</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: DOCUMENTS -->
+          <div class="form-step" id="step4">
+            <h2 class="step-title">Verification Documents</h2>
+            <p class="step-desc">Please upload <strong>at least one</strong> document to verify your eligibility. You only need ONE — choose whichever is easiest for you to access.</p>
+
+            <div class="doc-options">
+              <h3>Accepted Documents — Choose Any One:</h3>
+              <div class="doc-grid">
+                <div class="doc-option">📋 IEP (Individualized Education Program)</div>
+                <div class="doc-option">🏥 Letter from pediatrician, neurologist, or therapist</div>
+                <div class="doc-option">💰 SSI/SSDI award letter for your child</div>
+                <div class="doc-option">🏢 Regional Center enrollment letter</div>
+                <div class="doc-option">🛒 EBT/CalFresh card or approval letter</div>
+                <div class="doc-option">🏥 Medi-Cal / Medicaid card</div>
+                <div class="doc-option">📄 Most recent tax return (page 1 only)</div>
+                <div class="doc-option">✍️ Signed self-declaration letter</div>
+              </div>
+            </div>
+
+            <div class="upload-area" id="uploadArea">
+              <input type="file" id="docUpload" name="documents" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display:none" onchange="handleFileUpload(event)"/>
+              <div class="upload-inner" onclick="document.getElementById('docUpload').click()">
+                <div class="upload-icon">📁</div>
+                <p class="upload-main">Click to upload or drag & drop</p>
+                <p class="upload-sub">PDF, JPG, PNG, DOC — up to 10MB each</p>
+              </div>
+            </div>
+
+            <div id="fileList" class="file-list"></div>
+
+            <div class="self-declare-section">
+              <h3>Don't have a document right now?</h3>
+              <p>You can write a brief self-declaration below instead. By checking the box, you attest that the information you've shared is true to the best of your knowledge.</p>
+              <label class="checkbox-label big">
+                <input type="checkbox" id="selfDeclare" name="selfDeclare" onchange="toggleSelfDeclare()"/>
+                I am submitting a self-declaration in lieu of a verification document
+              </label>
+              <div id="selfDeclareBox" style="display:none;" class="form-group full" style="margin-top:16px">
+                <label for="selfDeclareText">Self-Declaration Statement <span class="req">*</span></label>
+                <textarea id="selfDeclareText" name="selfDeclareText" rows="5" placeholder="Example: I, [your name], declare that I am a single parent of a child diagnosed with autism. I am currently unable to maintain traditional employment due to my caregiving responsibilities. I attest that this information is true and accurate to the best of my knowledge..."></textarea>
+              </div>
+            </div>
+
+            <div class="privacy-note">
+              🔒 <strong>Your privacy is protected.</strong> All documents are stored securely and confidentially. Your personal information and documentation will never be shared publicly or with third parties.
+            </div>
+
+            <div class="form-nav">
+              <button type="button" class="btn-back" onclick="prevStep(4)">← Back</button>
+              <button type="button" class="btn-next" onclick="nextStep(4)">Next: Review →</button>
+            </div>
+          </div>
+
+          <!-- STEP 5: REVIEW & SUBMIT -->
+          <div class="form-step" id="step5">
+            <h2 class="step-title">Review & Submit</h2>
+            <p class="step-desc">Please review your information before submitting. Your application will be reviewed within 5–7 business days.</p>
+
+            <div class="review-section" id="reviewContent">
+              <!-- populated by JS -->
+            </div>
+
+            <div class="consent-section">
+              <label class="checkbox-label big">
+                <input type="checkbox" id="consentAccurate" required/>
+                I certify that all information provided in this application is true and accurate to the best of my knowledge. <span class="req">*</span>
+              </label>
+              <label class="checkbox-label big">
+                <input type="checkbox" id="consentPrivacy" required/>
+                I understand that my information will be kept confidential and used only to evaluate my eligibility for The Giving Pallet Foundation program. <span class="req">*</span>
+              </label>
+              <label class="checkbox-label big">
+                <input type="checkbox" id="consentContact"/>
+                I give permission for The Giving Pallet Foundation to share my story (anonymously or with credit) for outreach and fundraising purposes. (Optional)
+              </label>
+            </div>
+
+            <div class="form-nav">
+              <button type="button" class="btn-back" onclick="prevStep(5)">← Back</button>
+              <button type="button" class="btn-submit" onclick="submitApplication()">Submit My Application 🧡</button>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- SUCCESS STATE -->
+        <div class="success-state" id="successState" style="display:none">
+          <div class="success-icon">🧡</div>
+          <h2>Application Received!</h2>
+          <p>Thank you for trusting us with your story. Your application has been submitted and will be reviewed by our team within <strong>5–7 business days</strong>.</p>
+          <p>You will receive a confirmation email at the address you provided. In the meantime, please don't hesitate to reach out with any questions.</p>
+          <div class="success-id" id="applicationId"></div>
+          <a href="index.html" class="btn-primary">← Return to Homepage</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-text">🧡 The Giving <strong>Pallet</strong> Foundation</span>
+          <p>Empowering families, one pallet at a time.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 The Giving Pallet Foundation. A 501(c)(3) nonprofit organization. All information is kept strictly confidential.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/apply.js"></script>
+</body>
+</html>

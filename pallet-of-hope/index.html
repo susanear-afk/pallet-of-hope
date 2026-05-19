@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Giving Pallet Foundation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="logo">
+        <span class="logo-icon">🧡</span>
+        <span class="logo-text">The Giving <strong>Pallet</strong></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#mission">Mission</a></li>
+        <li><a href="apply.html" class="nav-cta">Apply Now</a></li>
+      </ul>
+      <button class="hamburger" onclick="toggleMenu()">&#9776;</button>
+    </div>
+    <ul class="mobile-menu" id="mobileMenu">
+      <li><a href="#about" onclick="toggleMenu()">About</a></li>
+      <li><a href="#how-it-works" onclick="toggleMenu()">How It Works</a></li>
+      <li><a href="#mission" onclick="toggleMenu()">Mission</a></li>
+      <li><a href="apply.html">Apply Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-content">
+      <div class="hero-badge">501(c)(3) Nonprofit Foundation</div>
+      <h1 class="hero-title">
+        Clothing Families<br/>
+        <em>with Hope &</em><br/>
+        Opportunity
+      </h1>
+      <p class="hero-sub">We donate clothing inventory and reseller education to low-income single parents and autism families — because caregiving shouldn't mean choosing between your child and your livelihood.</p>
+      <div class="hero-actions">
+        <a href="apply.html" class="btn-primary">Apply for a Pallet</a>
+        <a href="#about" class="btn-ghost">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card card-1">
+        <div class="card-icon">👕</div>
+        <div class="card-label">Clothing Pallets Donated</div>
+      </div>
+      <div class="hero-card card-2">
+        <div class="card-icon">👨‍👩‍👧</div>
+        <div class="card-label">Families Empowered</div>
+      </div>
+      <div class="hero-card card-3">
+        <div class="card-icon">💼</div>
+        <div class="card-label">Resellers Launched</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <span class="section-label">Our Story</span>
+          <h2>Born from Experience,<br/><em>Driven by Heart</em></h2>
+          <p>The Giving Pallet was founded by two clothing liquidators and wholesalers who know the industry inside and out — and one of our founders is an autism mom raising three beautiful children.</p>
+          <p>We saw firsthand how impossible it is to hold a traditional 9-to-5 when your child needs you for therapy appointments, school pickups, sensory emergencies, and daily caregiving that doesn't follow anyone's schedule.</p>
+          <p>So we built a solution: <strong>donate clothing inventory directly to families</strong> and teach them how to resell it — creating flexible, work-from-home income that bends to their life, not the other way around.</p>
+        </div>
+        <div class="about-stats">
+          <div class="stat-card">
+            <div class="stat-icon">🧡</div>
+            <h3>Autism Families</h3>
+            <p>Supporting parents navigating the full-time demands of raising children with autism spectrum disorder</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👤</div>
+            <h3>Single Parents</h3>
+            <p>Empowering solo caregivers who face employment barriers due to their caregiving responsibilities</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💛</div>
+            <h3>Low-Income Families</h3>
+            <p>Reaching families who need both material support and a path toward financial independence</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <span class="section-label light">The Process</span>
+      <h2>How The Giving Pallet Works</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>You Apply</h3>
+          <p>Fill out our compassionate application, share your story, and submit one verification document. No wrong answers — we just want to know your heart.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>We Review</h3>
+          <p>Our team reviews applications with care and fairness within 5–7 business days. Every application is read by two people.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>You Receive</h3>
+          <p>Selected families receive a pallet of clothing inventory — real, sellable merchandise to launch their reselling business.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>You Grow</h3>
+          <p>We provide reseller education, community support, and guidance so you can build income on your own schedule, around your family's needs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section class="mission" id="mission">
+    <div class="container">
+      <div class="mission-inner">
+        <span class="section-label">Our Mission</span>
+        <blockquote>
+          "Our mission is to empower low-income single parents and autism families — especially those who face barriers to traditional employment due to the daily demands of caregiving — by donating clothing inventory and providing the business education needed to launch and grow reselling businesses. Because every family deserves a pathway to financial independence and a community that has their back, <em>one pallet at a time.</em>"
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO QUALIFIES -->
+  <section class="qualifies">
+    <div class="container">
+      <span class="section-label">Eligibility</span>
+      <h2>Who Can Apply?</h2>
+      <div class="qualify-grid">
+        <div class="qualify-card">
+          <h3>✅ You May Qualify If You Are:</h3>
+          <ul>
+            <li>A single parent with low income</li>
+            <li>A parent of a child with autism or special needs</li>
+            <li>Unable to maintain traditional employment due to caregiving</li>
+            <li>Motivated to start or grow a reselling business</li>
+            <li>Willing to share your story and goals</li>
+          </ul>
+        </div>
+        <div class="qualify-card">
+          <h3>📄 Accepted Verification Documents:</h3>
+          <ul>
+            <li>IEP (Individualized Education Program)</li>
+            <li>Letter from pediatrician, neurologist, or therapist</li>
+            <li>SSI/SSDI award letter for your child</li>
+            <li>Regional Center enrollment letter</li>
+            <li>EBT/CalFresh card or approval letter</li>
+            <li>Medi-Cal/Medicaid card</li>
+            <li>Most recent tax return (page 1 only)</li>
+            <li>Signed self-declaration letter</li>
+          </ul>
+        </div>
+      </div>
+      <div class="apply-cta">
+        <p>There are no wrong answers. We just want to know your heart and your story.</p>
+        <a href="apply.html" class="btn-primary large">Start Your Application</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-text">🧡 The Giving <strong>Pallet</strong> Foundation</span>
+          <p>Empowering families, one pallet at a time.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#about">About</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#mission">Mission</a>
+          <a href="apply.html">Apply</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 The Giving Pallet Foundation. A 501(c)(3) nonprofit organization. All donations are tax-deductible.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
