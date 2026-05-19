@@ -41,10 +41,79 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve the frontend from parent folder
 app.use(express.static(FRONTEND_DIR));
-// Serve uploads (admin use only — add auth before going public)
-app.use('/uploads', express.static(UPLOADS_DIR));
-// Serve admin panel
-app.use('/admin', express.static(path.join(__dirname, 'admin')));
+
+// ---- ADMIN AUTH MIDDLEWARE ----
+// Simple token-based auth for admin routes
+function adminAuth(req, res, next) {
+  // Allow login page and auth endpoint through without token
+  if (req.path === '/login.html' || req.path === '/login' || req.path === '/') {
+    return next();
+  }
+  // Check session token in cookie or header
+  const token = req.cookies && req.cookies.admin_token;
+  const validToken = process.env.ADMIN_TOKEN;
+  if (!validToken) {
+    console.warn('⚠️  ADMIN_TOKEN not set in environment variables!');
+    return next(); // fail open if not configured yet
+  }
+  if (token === validToken) {
+    return next();
+  }
+  // Not authenticated — redirect to login
+  res.redirect('/admin/login.html');
+}
+
+// Parse cookies
+app.use((req, res, next) => {
+  const cookieHeader = req.headers.cookie || '';
+  req.cookies = {};
+  cookieHeader.split(';').forEach(part => {
+    const [key, ...val] = part.trim().split('=');
+    if (key) req.cookies[key.trim()] = decodeURIComponent(val.join('=').trim());
+  });
+  next();
+});
+
+// POST /admin/auth — handle login form submission
+app.post('/admin/auth', (req, res) => {
+  const { password } = req.body;
+  const validPassword = process.env.ADMIN_PASSWORD || 'givingpallet2025';
+  const adminToken    = process.env.ADMIN_TOKEN    || 'tgp-admin-token-2025';
+  if (password === validPassword) {
+    // Set secure cookie valid for 8 hours
+    res.setHeader('Set-Cookie', `admin_token=${adminToken}; Path=/; HttpOnly; Max-Age=28800; SameSite=Strict`);
+    res.redirect('/admin/index.html');
+  } else {
+    res.redirect('/admin/login.html?error=1');
+  }
+});
+
+// POST /admin/logout
+app.post('/admin/logout', (req, res) => {
+  res.setHeader('Set-Cookie', 'admin_token=; Path=/; HttpOnly; Max-Age=0');
+  res.redirect('/admin/login.html');
+});
+
+// Serve uploads (protected)
+app.use('/uploads', adminAuth, express.static(UPLOADS_DIR));
+// Serve admin panel with auth protection
+app.use('/admin', adminAuth, express.static(path.join(__dirname, 'admin')));
+
+// Also protect all /api/ routes (except public apply endpoint)
+app.use('/api/applications', (req, res, next) => {
+  const token = req.cookies && req.cookies.admin_token;
+  const validToken = process.env.ADMIN_TOKEN;
+  if (!validToken) return next();
+  if (token === validToken) return next();
+  res.status(401).json({ success: false, error: 'Unauthorized' });
+});
+app.use('/api/stats', (req, res, next) => {
+  const token = req.cookies && req.cookies.admin_token;
+  const validToken = process.env.ADMIN_TOKEN;
+  if (!validToken) return next();
+  if (token === validToken) return next();
+  res.status(401).json({ success: false, error: 'Unauthorized' });
+});
 
 // ---- FILE UPLOAD CONFIG ----
 const storage = multer.diskStorage({

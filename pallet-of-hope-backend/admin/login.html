@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — The Giving Pallet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #1C1008;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-logo .icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .login-logo h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: #1C1008;
+    }
+
+    .login-logo h1 span { color: #E8621A; }
+
+    .login-logo p {
+      font-size: 0.85rem;
+      color: #7A6558;
+      margin-top: 6px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #E8DDD5;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1C1008;
+      margin-bottom: 8px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid #E8DDD5;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: #1C1008;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.1em;
+    }
+
+    input[type="password"]:focus {
+      border-color: #E8621A;
+      box-shadow: 0 0 0 3px rgba(232,98,26,0.1);
+    }
+
+    input[type="password"].error {
+      border-color: #C53030;
+      box-shadow: 0 0 0 3px rgba(197,48,48,0.1);
+    }
+
+    .error-msg {
+      display: none;
+      background: #FFF5F5;
+      border: 1px solid #FC8181;
+      color: #C53030;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .error-msg.show { display: block; }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: #E8621A;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 4px 16px rgba(232,98,26,0.3);
+    }
+
+    .login-btn:hover {
+      background: #F97B3D;
+      transform: translateY(-1px);
+    }
+
+    .login-btn:active { transform: translateY(0); }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #7A6558;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #7A6558;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: #E8621A; }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="icon">🧡</span>
+      <h1>The Giving <span>Pallet</span></h1>
+      <p>Admin Dashboard — Secure Access</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="error-msg" id="errorMsg">
+      ❌ Incorrect password. Please try again.
+    </div>
+
+    <form method="POST" action="/admin/auth">
+      <div class="form-group">
+        <label for="password">Admin Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your admin password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+      <button type="submit" class="login-btn">
+        Sign In to Dashboard →
+      </button>
+    </form>
+
+    <div class="login-footer">
+      🔒 This area is restricted to authorized staff only.
+    </div>
+
+    <a href="/" class="back-link">← Back to website</a>
+  </div>
+
+  <script>
+    // Show error if redirected with ?error=1
+    if (window.location.search.includes('error=1')) {
+      document.getElementById('errorMsg').classList.add('show');
+      document.getElementById('password').classList.add('error');
+    }
+    // Focus password field on load
+    document.getElementById('password').focus();
+  </script>
+
+</body>
+</html>
