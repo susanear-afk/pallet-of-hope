@@ -163,7 +163,10 @@ if (cloudinaryConfigured) {
 }
 
 // ---- MIDDLEWARE ----
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -199,7 +202,7 @@ app.post('/admin/auth', (req, res) => {
   const validPassword = process.env.ADMIN_PASSWORD || 'givingpallet2025';
   const adminToken    = process.env.ADMIN_TOKEN    || 'tgp-admin-token-2025';
   if (password === validPassword) {
-    res.setHeader('Set-Cookie', `admin_token=${adminToken}; Path=/; HttpOnly; Max-Age=28800; SameSite=Strict`);
+    res.setHeader('Set-Cookie', `admin_token=${adminToken}; Path=/; HttpOnly; Max-Age=28800; SameSite=Lax`);
     res.redirect('/admin/index.html');
   } else {
     res.redirect('/admin/login.html?error=1');

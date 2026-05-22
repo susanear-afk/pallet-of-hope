@@ -323,8 +323,8 @@ let scores = {};
 async function loadData() {
   try {
     const [statsRes, appsRes] = await Promise.all([
-      fetch(API + '/api/stats'),
-      fetch(API + '/api/applications')
+      fetch(API + '/api/stats', { credentials: 'include' }),
+      fetch(API + '/api/applications', { credentials: 'include' })
     ]);
     const statsData = await statsRes.json();
     const appsData  = await appsRes.json();
@@ -433,7 +433,7 @@ async function openModal(id) {
   document.getElementById('modalBody').innerHTML = '<p style="padding:20px;color:var(--text-light)">Loading…</p>';
 
   try {
-    const res = await fetch(API + '/api/applications/' + id);
+    const res = await fetch(API + '/api/applications/' + id, { credentials: 'include' });
     const data = await res.json();
     if (!data.success) throw new Error(data.error);
     const a = data.application;
@@ -569,7 +569,7 @@ async function saveStatus(id) {
   const notes  = document.getElementById('reviewNotes').value;
   if (!status) return;
   try {
-    const res = await fetch(API + '/api/applications/' + id + '/status', {
+    const res = await fetch(API + '/api/applications/' + id + '/status', { credentials: 'include',
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status, reviewNotes: notes })
