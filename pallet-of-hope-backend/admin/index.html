@@ -331,9 +331,8 @@ function authHeaders() {
 
 function authFetch(url, options = {}) {
   const token = getToken();
-  // Build URL with token as query param as extra fallback
   const separator = url.includes('?') ? '&' : '?';
-  const urlWithToken = token ? url + separator + 'token=' + token : url;
+  const urlWithToken = token ? url + separator + 'token=' + encodeURIComponent(token) : url;
   return fetch(urlWithToken, {
     ...options,
     credentials: 'include',
@@ -349,9 +348,10 @@ let scores = {};
 
 async function loadData() {
   try {
+    const token = getToken();
     const [statsRes, appsRes] = await Promise.all([
-      authFetch(API + '/api/stats'),
-      authFetch(API + '/api/applications')
+      fetch(API + '/api/stats?token=' + token, { credentials: 'include', headers: { 'Authorization': 'Bearer ' + token } }),
+      fetch(API + '/api/applications?token=' + token, { credentials: 'include', headers: { 'Authorization': 'Bearer ' + token } })
     ]);
     const statsData = await statsRes.json();
     const appsData  = await appsRes.json();
@@ -654,12 +654,18 @@ const urlParams = new URLSearchParams(window.location.search);
 const urlToken  = urlParams.get('auth');
 if (urlToken) {
   sessionStorage.setItem('admin_token', urlToken);
-  // Clean the token from URL without reloading
   window.history.replaceState({}, document.title, '/admin/index.html');
 }
 
+// If no token in session, check if we came from debug page (same session)
+if (!getToken()) {
+  console.warn('No admin token found — please log in again');
+}
+
+console.log('Token present:', !!getToken(), '| Length:', getToken().length);
+
 loadData();
-setInterval(loadData, 30000); // auto-refresh every 30s
+setInterval(loadData, 30000);
 </script>
 </body>
 </html>
