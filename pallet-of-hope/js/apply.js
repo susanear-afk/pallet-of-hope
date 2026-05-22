@@ -49,21 +49,21 @@ function updateProgress(step) {
 
 function validateStep(step) {
   let valid = true;
+  // Clear all existing errors first
+  document.querySelectorAll('.form-step.active .error').forEach(el => el.classList.remove('error'));
 
   if (step === 1) {
     const fields = ['firstName', 'lastName', 'email', 'phone', 'zip', 'city'];
     fields.forEach(id => {
       const el = document.getElementById(id);
-      if (!el.value.trim()) {
-        el.classList.add('error');
+      if (!el || !el.value.trim()) {
+        if (el) el.classList.add('error');
         valid = false;
-      } else {
-        el.classList.remove('error');
       }
     });
-    // Email format
+    // Email format — relaxed check
     const email = document.getElementById('email');
-    if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    if (email && email.value && email.value.indexOf('@') === -1) {
       email.classList.add('error');
       valid = false;
     }
@@ -73,11 +73,9 @@ function validateStep(step) {
     const fields = ['familyType', 'numChildren', 'childrenAges', 'employmentStatus', 'monthlyIncome'];
     fields.forEach(id => {
       const el = document.getElementById(id);
-      if (!el.value.trim()) {
-        el.classList.add('error');
+      if (!el || !el.value.trim()) {
+        if (el) el.classList.add('error');
         valid = false;
-      } else {
-        el.classList.remove('error');
       }
     });
   }
@@ -86,11 +84,9 @@ function validateStep(step) {
     const fields = ['dailyLife', 'employmentBarriers', 'resellerWhy', 'palletMeaning'];
     fields.forEach(id => {
       const el = document.getElementById(id);
-      if (!el.value.trim() || el.value.trim().length < 30) {
-        el.classList.add('error');
+      if (!el || !el.value.trim() || el.value.trim().length < 10) {
+        if (el) el.classList.add('error');
         valid = false;
-      } else {
-        el.classList.remove('error');
       }
     });
   }
@@ -98,14 +94,13 @@ function validateStep(step) {
   if (step === 4) {
     const selfDeclare = document.getElementById('selfDeclare').checked;
     const hasFiles = uploadedFiles.length > 0;
-
     if (!hasFiles && !selfDeclare) {
       alert('Please upload at least one document or complete the self-declaration to continue.');
       valid = false;
     }
     if (selfDeclare) {
       const text = document.getElementById('selfDeclareText').value.trim();
-      if (text.length < 20) {
+      if (text.length < 10) {
         document.getElementById('selfDeclareText').classList.add('error');
         valid = false;
       }
@@ -113,9 +108,13 @@ function validateStep(step) {
   }
 
   if (!valid && step < 4) {
+    // Scroll to top of form to show error message
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     const firstError = document.querySelector('.form-step.active .error');
-    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    showError('Please fill in all required fields before continuing.');
+    if (firstError) {
+      setTimeout(() => firstError.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+    }
+    showError('Please fill in all highlighted fields before continuing.');
   }
 
   return valid;
@@ -406,21 +405,21 @@ function updateProgress(step) {
 
 function validateStep(step) {
   let valid = true;
+  // Clear all existing errors first
+  document.querySelectorAll('.form-step.active .error').forEach(el => el.classList.remove('error'));
 
   if (step === 1) {
     const fields = ['firstName', 'lastName', 'email', 'phone', 'zip', 'city'];
     fields.forEach(id => {
       const el = document.getElementById(id);
-      if (!el.value.trim()) {
-        el.classList.add('error');
+      if (!el || !el.value.trim()) {
+        if (el) el.classList.add('error');
         valid = false;
-      } else {
-        el.classList.remove('error');
       }
     });
-    // Email format
+    // Email format — relaxed check
     const email = document.getElementById('email');
-    if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    if (email && email.value && email.value.indexOf('@') === -1) {
       email.classList.add('error');
       valid = false;
     }
@@ -430,11 +429,9 @@ function validateStep(step) {
     const fields = ['familyType', 'numChildren', 'childrenAges', 'employmentStatus', 'monthlyIncome'];
     fields.forEach(id => {
       const el = document.getElementById(id);
-      if (!el.value.trim()) {
-        el.classList.add('error');
+      if (!el || !el.value.trim()) {
+        if (el) el.classList.add('error');
         valid = false;
-      } else {
-        el.classList.remove('error');
       }
     });
   }
@@ -443,11 +440,9 @@ function validateStep(step) {
     const fields = ['dailyLife', 'employmentBarriers', 'resellerWhy', 'palletMeaning'];
     fields.forEach(id => {
       const el = document.getElementById(id);
-      if (!el.value.trim() || el.value.trim().length < 30) {
-        el.classList.add('error');
+      if (!el || !el.value.trim() || el.value.trim().length < 10) {
+        if (el) el.classList.add('error');
         valid = false;
-      } else {
-        el.classList.remove('error');
       }
     });
   }
@@ -455,14 +450,13 @@ function validateStep(step) {
   if (step === 4) {
     const selfDeclare = document.getElementById('selfDeclare').checked;
     const hasFiles = uploadedFiles.length > 0;
-
     if (!hasFiles && !selfDeclare) {
       alert('Please upload at least one document or complete the self-declaration to continue.');
       valid = false;
     }
     if (selfDeclare) {
       const text = document.getElementById('selfDeclareText').value.trim();
-      if (text.length < 20) {
+      if (text.length < 10) {
         document.getElementById('selfDeclareText').classList.add('error');
         valid = false;
       }
@@ -470,9 +464,13 @@ function validateStep(step) {
   }
 
   if (!valid && step < 4) {
+    // Scroll to top of form to show error message
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     const firstError = document.querySelector('.form-step.active .error');
-    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    showError('Please fill in all required fields before continuing.');
+    if (firstError) {
+      setTimeout(() => firstError.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+    }
+    showError('Please fill in all highlighted fields before continuing.');
   }
 
   return valid;
