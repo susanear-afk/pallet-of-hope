@@ -316,6 +316,29 @@
 
 const API = '';  // same origin
 let allApplications = [];
+
+// Get admin token from sessionStorage (set on login)
+function getToken() {
+  return sessionStorage.getItem('admin_token') || '';
+}
+
+function authHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + getToken()
+  };
+}
+
+function authFetch(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    credentials: 'include',
+    headers: {
+      ...(options.headers || {}),
+      'Authorization': 'Bearer ' + getToken()
+    }
+  });
+}
 let currentFilter = 'all';
 let currentAppId = null;
 let scores = {};
@@ -323,8 +346,8 @@ let scores = {};
 async function loadData() {
   try {
     const [statsRes, appsRes] = await Promise.all([
-      fetch(API + '/api/stats', { credentials: 'include' }),
-      fetch(API + '/api/applications', { credentials: 'include' })
+      authFetch(API + '/api/stats'),
+      authFetch(API + '/api/applications')
     ]);
     const statsData = await statsRes.json();
     const appsData  = await appsRes.json();
@@ -433,7 +456,7 @@ async function openModal(id) {
   document.getElementById('modalBody').innerHTML = '<p style="padding:20px;color:var(--text-light)">Loading…</p>';
 
   try {
-    const res = await fetch(API + '/api/applications/' + id, { credentials: 'include' });
+    const res = await authFetch(API + '/api/applications/' + id);
     const data = await res.json();
     if (!data.success) throw new Error(data.error);
     const a = data.application;
@@ -569,7 +592,7 @@ async function saveStatus(id) {
   const notes  = document.getElementById('reviewNotes').value;
   if (!status) return;
   try {
-    const res = await fetch(API + '/api/applications/' + id + '/status', { credentials: 'include',
+    const res = await authFetch(API + '/api/applications/' + id + '/status', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status, reviewNotes: notes })
@@ -622,7 +645,15 @@ function formatFamilyType(t) {
   return t.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
-// Init
+// Init — grab token from URL if present (set after login redirect)
+const urlParams = new URLSearchParams(window.location.search);
+const urlToken  = urlParams.get('auth');
+if (urlToken) {
+  sessionStorage.setItem('admin_token', urlToken);
+  // Clean the token from URL without reloading
+  window.history.replaceState({}, document.title, '/admin/index.html');
+}
+
 loadData();
 setInterval(loadData, 30000); // auto-refresh every 30s
 </script>

@@ -202,8 +202,11 @@ app.post('/admin/auth', (req, res) => {
   const validPassword = process.env.ADMIN_PASSWORD || 'givingpallet2025';
   const adminToken    = process.env.ADMIN_TOKEN    || 'tgp-admin-token-2025';
   if (password === validPassword) {
-    res.setHeader('Set-Cookie', `admin_token=${adminToken}; Path=/; HttpOnly; Max-Age=28800; SameSite=Lax`);
-    res.redirect('/admin/index.html');
+    res.setHeader('Set-Cookie', [
+      `admin_token=${adminToken}; Path=/; HttpOnly; Max-Age=28800; SameSite=Lax`,
+    ]);
+    // Pass token in URL so admin JS can store it in sessionStorage
+    res.redirect('/admin/index.html?auth=' + adminToken);
   } else {
     res.redirect('/admin/login.html?error=1');
   }
@@ -221,10 +224,18 @@ app.use('/admin',   adminAuth, express.static(path.join(__dirname, 'admin')));
 
 // Protect API routes
 function apiAuth(req, res, next) {
-  const token      = req.cookies && req.cookies.admin_token;
   const validToken = process.env.ADMIN_TOKEN;
   if (!validToken) return next();
-  if (token === validToken) return next();
+  // Check cookie
+  const cookieToken = req.cookies && req.cookies.admin_token;
+  if (cookieToken === validToken) return next();
+  // Check Authorization header (Bearer token)
+  const authHeader = req.headers['authorization'] || '';
+  const bearerToken = authHeader.replace('Bearer ', '').trim();
+  if (bearerToken === validToken) return next();
+  // Check query param (fallback)
+  const queryToken = req.query && req.query.token;
+  if (queryToken === validToken) return next();
   res.status(401).json({ success: false, error: 'Unauthorized' });
 }
 app.use('/api/applications', apiAuth);
