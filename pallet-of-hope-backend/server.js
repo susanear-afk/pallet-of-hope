@@ -58,10 +58,13 @@ const applicationSchema = new mongoose.Schema({
     city: String, zip: String,
   },
   family: {
-    type: String, numChildren: String,
-    childrenAges: String, diagnosisType: String,
-    employmentStatus: String, monthlyIncome: String,
-    benefits: [String],
+    type:             { type: String },
+    numChildren:      { type: String },
+    childrenAges:     { type: String },
+    diagnosisType:    { type: String },
+    employmentStatus: { type: String },
+    monthlyIncome:    { type: String },
+    benefits:         { type: [String] },
   },
   story: {
     dailyLife: String, employmentBarriers: String,
