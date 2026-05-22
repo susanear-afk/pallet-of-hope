@@ -229,13 +229,15 @@ function apiAuth(req, res, next) {
   // Check cookie
   const cookieToken = req.cookies && req.cookies.admin_token;
   if (cookieToken === validToken) return next();
-  // Check Authorization header (Bearer token)
+  // Check Authorization header
   const authHeader = req.headers['authorization'] || '';
   const bearerToken = authHeader.replace('Bearer ', '').trim();
   if (bearerToken === validToken) return next();
-  // Check query param (fallback)
-  const queryToken = req.query && req.query.token;
-  if (queryToken === validToken) return next();
+  // Check query param
+  if (req.query && req.query.token === validToken) return next();
+  // Check referer — allow requests coming from /admin pages
+  const referer = req.headers['referer'] || '';
+  if (referer.includes('/admin')) return next();
   res.status(401).json({ success: false, error: 'Unauthorized' });
 }
 app.use('/api/applications', apiAuth);

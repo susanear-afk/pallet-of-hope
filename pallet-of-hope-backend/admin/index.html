@@ -330,12 +330,16 @@ function authHeaders() {
 }
 
 function authFetch(url, options = {}) {
-  return fetch(url, {
+  const token = getToken();
+  // Build URL with token as query param as extra fallback
+  const separator = url.includes('?') ? '&' : '?';
+  const urlWithToken = token ? url + separator + 'token=' + token : url;
+  return fetch(urlWithToken, {
     ...options,
     credentials: 'include',
     headers: {
       ...(options.headers || {}),
-      'Authorization': 'Bearer ' + getToken()
+      'Authorization': 'Bearer ' + token
     }
   });
 }
