@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Debug — The Giving Pallet</title>
+  <style>
+    body { font-family: monospace; padding: 30px; background: #1C1008; color: #E8DDD5; }
+    h2 { color: #E8621A; }
+    .box { background: #2D1F14; border: 1px solid #E8621A; border-radius: 8px; padding: 20px; margin: 16px 0; }
+    .ok  { color: #4CAF50; font-weight: bold; }
+    .err { color: #FF5252; font-weight: bold; }
+    .warn { color: #FFD700; font-weight: bold; }
+    button { background: #E8621A; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin: 5px; font-size: 1rem; }
+    pre { white-space: pre-wrap; word-break: break-all; font-size: 0.85rem; }
+    input { padding: 8px 12px; border-radius: 6px; border: none; font-size: 1rem; width: 300px; }
+  </style>
+</head>
+<body>
+<h2>🔧 The Giving Pallet — Admin Debug Panel</h2>
+
+<div class="box">
+  <h3>Step 1 — Enter Your Admin Token</h3>
+  <p>Find this in Render → Environment → ADMIN_TOKEN</p>
+  <input type="text" id="tokenInput" placeholder="Paste your ADMIN_TOKEN here"/>
+  <button onclick="saveToken()">Save Token</button>
+  <div id="tokenStatus"></div>
+</div>
+
+<div class="box">
+  <h3>Step 2 — Test API Connection</h3>
+  <button onclick="testStats()">Test /api/stats</button>
+  <button onclick="testApplications()">Test /api/applications</button>
+  <div id="apiResult"></div>
+</div>
+
+<div class="box">
+  <h3>Step 3 — Results</h3>
+  <pre id="output">Click a button above to test...</pre>
+</div>
+
+<script>
+function saveToken() {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (token) {
+    sessionStorage.setItem('admin_token', token);
+    document.getElementById('tokenStatus').innerHTML = '<span class="ok">✅ Token saved!</span>';
+  }
+}
+
+function getToken() {
+  return sessionStorage.getItem('admin_token') || '';
+}
+
+async function testStats() {
+  const out = document.getElementById('output');
+  const apiResult = document.getElementById('apiResult');
+  out.textContent = 'Testing /api/stats...';
+  try {
+    const res = await fetch('/api/stats', {
+      credentials: 'include',
+      headers: { 'Authorization': 'Bearer ' + getToken() }
+    });
+    const text = await res.text();
+    out.textContent = 'Status: ' + res.status + '\n\nResponse:\n' + text;
+    if (res.ok) {
+      apiResult.innerHTML = '<span class="ok">✅ API connected!</span>';
+      const data = JSON.parse(text);
+      out.textContent += '\n\nTotal applications in MongoDB: ' + data.stats.total;
+    } else {
+      apiResult.innerHTML = '<span class="err">❌ Auth failed — check your token</span>';
+    }
+  } catch (err) {
+    out.textContent = 'Error: ' + err.message;
+    apiResult.innerHTML = '<span class="err">❌ Connection error</span>';
+  }
+}
+
+async function testApplications() {
+  const out = document.getElementById('output');
+  out.textContent = 'Fetching applications...';
+  try {
+    const res = await fetch('/api/applications', {
+      credentials: 'include',
+      headers: { 'Authorization': 'Bearer ' + getToken() }
+    });
+    const text = await res.text();
+    out.textContent = 'Status: ' + res.status + '\n\nResponse:\n' + text;
+    if (res.ok) {
+      const data = JSON.parse(text);
+      out.textContent = 'Total applications: ' + data.total + '\n\n';
+      if (data.applications && data.applications.length > 0) {
+        data.applications.forEach((a, i) => {
+          out.textContent += (i+1) + '. ' + a.name + ' — ' + a.id + ' — ' + a.status + ' — ' + a.submittedAt + '\n';
+        });
+      } else {
+        out.textContent += 'NO APPLICATIONS FOUND IN DATABASE';
+      }
+    }
+  } catch (err) {
+    out.textContent = 'Error: ' + err.message;
+  }
+}
+
+// Auto-load token if already saved
+window.onload = () => {
+  const t = getToken();
+  if (t) {
+    document.getElementById('tokenInput').value = t;
+    document.getElementById('tokenStatus').innerHTML = '<span class="ok">✅ Token already saved</span>';
+  }
+};
+</script>
+</body>
+</html>
