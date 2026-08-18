@@ -7,10 +7,38 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .contact-topic-icon{font-size:1.4rem;margin-bottom:8px;}
+    .founder-logo-wrap{height:72px;display:flex;align-items:center;margin-bottom:18px;}
+    .founder-logo{max-height:64px;max-width:180px;object-fit:contain;}
+    .founder-logo.dark-bg{background:#2A2A2A;border-radius:8px;padding:10px 14px;}
+    .founder-card{background:#FDF8F3;border-radius:16px;padding:28px;border:1px solid #E8DDD5;margin-bottom:0;}
+    .founders{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px;}
+    .founder-name{font-size:1.05rem;font-weight:700;color:#1C1008;margin-bottom:2px;}
+    .founder-role{font-size:0.78rem;color:#E8621A;font-weight:600;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;}
+    .founder-bio{font-size:0.88rem;line-height:1.8;color:#7A6558;}
+    .founder-mantra{margin-top:14px;padding-top:14px;border-top:1px solid #E8DDD5;font-family:'Playfair Display',serif;font-style:italic;font-size:0.88rem;color:#E8621A;}
+    .deadline-badge{display:inline-block;background:#FFF0E8;border:1px solid #E8DDD5;border-radius:8px;padding:8px 16px;font-size:0.85rem;color:#E8621A;font-weight:600;margin-top:16px;}
+    .prize-tiers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+    .prize-tier{border-radius:10px;padding:12px 14px;text-align:left;}
+    .prize-tier.box{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);}
+    .prize-tier.pallet{background:rgba(232,98,26,0.2);border:1px solid rgba(232,98,26,0.4);}
+    .prize-tier-label{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .prize-tier.box .prize-tier-label{color:rgba(255,255,255,0.5);}
+    .prize-tier.pallet .prize-tier-label{color:#E8621A;}
+    .prize-tier-title{font-size:0.92rem;font-weight:700;color:white;margin-bottom:2px;}
+    .prize-tier-val{font-size:0.78rem;}
+    .prize-tier.box .prize-tier-val{color:rgba(255,255,255,0.45);}
+    .prize-tier.pallet .prize-tier-val{color:rgba(232,98,26,0.8);}
+    .mission-text{font-family:'Playfair Display',serif;font-size:1.15rem;color:#3D2B1A;line-height:1.9;}
+    .mission-text em{color:#E8621A;font-style:italic;}
+    .mission-line{display:block;width:48px;height:3px;background:#E8621A;border-radius:2px;margin:24px auto 0;}
+    .sub-note{display:block;font-size:0.78rem;color:#A08878;margin-top:2px;font-style:italic;}
+    @media(max-width:768px){.founders{grid-template-columns:1fr;}}
+  </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav class="navbar">
     <div class="nav-inner">
       <div class="logo">
@@ -21,6 +49,7 @@
         <li><a href="#about">About</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#mission">Mission</a></li>
+        <li><a href="contact.html">Contact</a></li>
         <li><a href="apply.html" class="nav-cta">Apply Now</a></li>
       </ul>
       <button class="hamburger" onclick="toggleMenu()">&#9776;</button>
@@ -29,6 +58,7 @@
       <li><a href="#about" onclick="toggleMenu()">About</a></li>
       <li><a href="#how-it-works" onclick="toggleMenu()">How It Works</a></li>
       <li><a href="#mission" onclick="toggleMenu()">Mission</a></li>
+      <li><a href="contact.html" onclick="toggleMenu()">Contact</a></li>
       <li><a href="apply.html">Apply Now</a></li>
     </ul>
   </nav>
@@ -37,22 +67,21 @@
   <section class="hero">
     <div class="hero-bg-pattern"></div>
     <div class="hero-content">
-      <div class="hero-badge">501(c)(3) Nonprofit Foundation</div>
       <h1 class="hero-title">
         Clothing Families<br/>
         <em>with Hope &</em><br/>
         Opportunity
       </h1>
-      <p class="hero-sub">We donate clothing inventory and reseller education to low-income single parents and autism families — because caregiving shouldn't mean choosing between your child and your livelihood.</p>
+      <p class="hero-sub">We donate clothing inventory by the box and by the pallet to families in need — specifically <strong>low-income, single-parent households</strong> and <strong>families raising children with special needs.</strong> Caregiving shouldn't mean choosing between your child and your livelihood.</p>
       <div class="hero-actions">
-        <a href="apply.html" class="btn-primary">Apply for a Pallet</a>
-        <a href="#about" class="btn-ghost">Learn More</a>
+        <a href="apply.html" class="btn-primary">Apply Now</a>
       </div>
+      <div class="deadline-badge">📅 Applications due September 30, 2026</div>
     </div>
     <div class="hero-visual">
       <div class="hero-card card-1">
         <div class="card-icon">👕</div>
-        <div class="card-label">Clothing Pallets Donated</div>
+        <div class="card-label">Clothing Donated by Box & Pallet</div>
       </div>
       <div class="hero-card card-2">
         <div class="card-icon">👨‍👩‍👧</div>
@@ -72,9 +101,8 @@
         <div class="about-text">
           <span class="section-label">Our Story</span>
           <h2>Born from Experience,<br/><em>Driven by Heart</em></h2>
-          <p>The Giving Pallet was founded by two clothing liquidators and wholesalers who know the industry inside and out — and one of our founders is an autism mom raising three beautiful children.</p>
-          <p>We saw firsthand how impossible it is to hold a traditional 9-to-5 when your child needs you for therapy appointments, school pickups, sensory emergencies, and daily caregiving that doesn't follow anyone's schedule.</p>
-          <p>So we built a solution: <strong>donate clothing inventory directly to families</strong> and teach them how to resell it — creating flexible, work-from-home income that bends to their life, not the other way around.</p>
+          <p>The Giving Pallet was founded by two clothing liquidators who know the industry inside and out — Lucy Li and Susan Kattamuri. Both women entered reverse logistics in 2023 and within three years built thriving businesses of their own. Along the way, they saw an opportunity to turn that success into something bigger: a way to hand other families the same tools that changed their lives.</p>
+          <p>Their two paths led to the same idea: <strong>donate clothing inventory directly to families and teach them how to resell it</strong> — creating flexible, work-from-home income that bends to their life, not the other way around.</p>
         </div>
         <div class="about-stats">
           <div class="stat-card">
@@ -94,6 +122,28 @@
           </div>
         </div>
       </div>
+
+      <!-- FOUNDERS -->
+      <div class="founders">
+        <div class="founder-card">
+          <div class="founder-logo-wrap">
+            <img src="lucys-liquidation-logo.png" alt="Lucy's Liquidation" class="founder-logo dark-bg"/>
+          </div>
+          <div class="founder-name">Lucy Li</div>
+          <div class="founder-role">Co-Founder · Chicago, Illinois</div>
+          <div class="founder-bio">Lucy is the owner of Lucy's Liquidation, based in Chicago, Illinois. Lucy's core operation is built on direct third-party logistics and retailer relationships. As a primary contract holder to several fashion brands, Lucy has deep ties across the supply chain — bringing the infrastructure and sourcing power that makes The Giving Pallet possible. Lucy built her business on relationships, and The Giving Pallet is her way of extending that same spirit of generosity to families who are ready to build something of their own.</div>
+          <div class="founder-mantra">"Success means more when you bring someone else with you."</div>
+        </div>
+        <div class="founder-card">
+          <div class="founder-logo-wrap">
+            <img src="sgv-deals-logo.jpeg" alt="SGV Deals" class="founder-logo"/>
+          </div>
+          <div class="founder-name">Susan Kattamuri</div>
+          <div class="founder-role">Co-Founder · Los Angeles, California</div>
+          <div class="founder-bio">Susan is the owner of SGV Deals, based in Los Angeles, California. She is raising three children with autism, each with different challenges — one of whom will require one-on-one support for life. She saw firsthand how impossible it is to hold a traditional 9-to-5 when autism means constantly juggling medical appointments, school needs, sensory emergencies, and therapy. Susan started reselling on Facebook Marketplace in 2019 on her own schedule, and in 2023 entered the liquidation industry with her first truckload purchase. What started as a few listings grew into pallets, then full truckloads. Having built something from nothing while raising three children with autism, Susan knows exactly what's possible when a family gets the right opportunity at the right time — and she's determined to be that opportunity for someone else.</div>
+          <div class="founder-mantra">"Living is giving."</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -106,25 +156,38 @@
         <div class="step">
           <div class="step-num">01</div>
           <h3>You Apply</h3>
-          <p>Fill out our compassionate application, share your story, and submit one verification document. No wrong answers — we just want to know your heart.</p>
+          <p>Fill out our compassionate application and share your story. No wrong answers — we just want to know your heart.</p>
+          <p style="color:#E8621A;font-weight:600;font-size:0.85rem;margin-top:8px;">Due September 30, 2026</p>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">02</div>
           <h3>We Review</h3>
-          <p>Our team reviews applications with care and fairness within 5–7 business days. Every application is read by two people.</p>
+          <p>Applications are reviewed with care and fairness. Winners announced October 15, 2026.</p>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">03</div>
           <h3>You Receive</h3>
-          <p>Selected families receive a pallet of clothing inventory — real, sellable merchandise to launch their reselling business.</p>
+          <p>We are donating <strong style="color:white">50 boxes and 5 pallets</strong> of real, sellable clothing to launch your reselling business.</p>
+          <div class="prize-tiers">
+            <div class="prize-tier box">
+              <div class="prize-tier-label">50 families</div>
+              <div class="prize-tier-title">1 Box</div>
+              <div class="prize-tier-val">Wholesale value at $200</div>
+            </div>
+            <div class="prize-tier pallet">
+              <div class="prize-tier-label">5 finalists</div>
+              <div class="prize-tier-title">1 Pallet</div>
+              <div class="prize-tier-val">Wholesale value at $1,200</div>
+            </div>
+          </div>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">04</div>
           <h3>You Grow</h3>
-          <p>We provide reseller education, community support, and guidance so you can build income on your own schedule, around your family's needs.</p>
+          <p>All recipients receive <strong style="color:white">free reseller education</strong> and community support so you can build income on your own schedule, around your family's needs.</p>
         </div>
       </div>
     </div>
@@ -135,9 +198,8 @@
     <div class="container">
       <div class="mission-inner">
         <span class="section-label">Our Mission</span>
-        <blockquote>
-          "Our mission is to empower low-income single parents and autism families — especially those who face barriers to traditional employment due to the daily demands of caregiving — by donating clothing inventory and providing the business education needed to launch and grow reselling businesses. Because every family deserves a pathway to financial independence and a community that has their back, <em>one pallet at a time.</em>"
-        </blockquote>
+        <p class="mission-text">Our mission is to empower low-income, single parent households or families raising children with special needs — especially those who face barriers to traditional employment due to the daily demands of caregiving — by donating clothing inventory and providing the business education needed to launch and grow reselling businesses. Because every family deserves a pathway to financial independence and a community that has their back, <em>one pallet at a time.</em></p>
+        <span class="mission-line"></span>
       </div>
     </div>
   </section>
@@ -149,9 +211,10 @@
       <h2>Who Can Apply?</h2>
       <div class="qualify-grid">
         <div class="qualify-card">
-          <h3>✅ You May Qualify If You Are:</h3>
+          <h3>✅ You may qualify if you are:</h3>
           <ul>
-            <li>A single parent with low income</li>
+            <li>A single parent<span class="sub-note">Head of household raising children independently</span></li>
+            <li>Low income as determined by federal guidelines<span class="sub-note">Based on current HHS poverty guidelines</span></li>
             <li>A parent of a child with autism or special needs</li>
             <li>Unable to maintain traditional employment due to caregiving</li>
             <li>Motivated to start or grow a reselling business</li>
@@ -159,7 +222,7 @@
           </ul>
         </div>
         <div class="qualify-card">
-          <h3>📄 Accepted Verification Documents:</h3>
+          <h3>📄 Accepted verification documents:</h3>
           <ul>
             <li>IEP (Individualized Education Program)</li>
             <li>Letter from pediatrician, neurologist, or therapist</li>
@@ -174,7 +237,9 @@
       </div>
       <div class="apply-cta">
         <p>There are no wrong answers. We just want to know your heart and your story.</p>
-        <a href="apply.html" class="btn-primary large">Start Your Application</a>
+        <div class="deadline-badge" style="display:inline-block;margin-bottom:24px;">📅 Applications due September 30, 2026 · Winners announced October 15</div>
+        <br/>
+        <a href="apply.html" class="btn-primary large">Apply Now</a>
       </div>
     </div>
   </section>
@@ -191,11 +256,12 @@
           <a href="#about">About</a>
           <a href="#how-it-works">How It Works</a>
           <a href="#mission">Mission</a>
+          <a href="contact.html">Contact</a>
           <a href="apply.html">Apply</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2025 The Giving Pallet Foundation. A 501(c)(3) nonprofit organization. All donations are tax-deductible.</p>
+        <p>© 2026 The Giving Pallet Foundation. All rights reserved.</p>
       </div>
     </div>
   </footer>
