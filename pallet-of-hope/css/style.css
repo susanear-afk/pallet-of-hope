@@ -238,6 +238,7 @@ p { font-size: 1.05rem; color: var(--text-light); }
   position: relative;
   z-index: 1;
   animation: fadeUp 0.8s 0.2s ease both;
+  align-items: stretch;
 }
 
 .hero-card {
@@ -248,15 +249,18 @@ p { font-size: 1.05rem; color: var(--text-light); }
   box-shadow: var(--shadow);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   transition: transform 0.3s;
+  width: 100%;
+  min-height: 80px;
 }
-.hero-card:hover { transform: translateX(8px); }
+.hero-card:hover { transform: translateX(4px); }
 .card-1 { margin-left: 0; }
-.card-2 { margin-left: 32px; }
-.card-3 { margin-left: 16px; }
-.card-icon { font-size: 2rem; }
-.card-label { font-weight: 600; color: var(--dark); font-size: 0.95rem; }
+.card-2 { margin-left: 0; }
+.card-3 { margin-left: 0; }
+.card-icon { font-size: 2rem; flex-shrink: 0; }
+.card-label { font-weight: 600; color: var(--dark); font-size: 0.95rem; text-align: center; }
 
 /* ===========================
    BUTTONS
