@@ -90,6 +90,32 @@ const applicationSchema = new mongoose.Schema({
 
 const Application = mongoose.model('Application', applicationSchema);
 
+// ---- CONTACT MESSAGE SCHEMA ----
+const contactSchema = new mongoose.Schema({
+  id:          { type: String, required: true, unique: true },
+  status:      { type: String, default: 'unread', enum: ['unread','read','replied'] },
+  submittedAt: { type: Date, default: Date.now },
+  firstName:   String,
+  lastName:    String,
+  email:       String,
+  phone:       String,
+  topic:       String,
+  message:     String,
+}, { strict: false });
+const Contact = mongoose.model('Contact', contactSchema);
+
+async function saveContact(msg) {
+  if (usingMongo) { const doc = new Contact(msg); await doc.save(); }
+}
+async function getAllContacts() {
+  if (usingMongo) return await Contact.find({}).sort({ submittedAt: -1 }).lean();
+  return [];
+}
+async function updateContactStatus(id, status) {
+  if (usingMongo) return await Contact.findOneAndUpdate({ id }, { status }, { new: true }).lean();
+  return null;
+}
+
 // ---- JSON FILE FALLBACK ----
 const DATA_DIR  = path.join(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'applications.json');
@@ -224,18 +250,20 @@ app.use('/admin',   adminAuth, express.static(path.join(__dirname, 'admin')));
 
 // Protect API routes
 function apiAuth(req, res, next) {
-  const validToken = process.env.ADMIN_TOKEN;
+  const validToken    = process.env.ADMIN_TOKEN;
+  const validPassword = process.env.ADMIN_PASSWORD || 'givingpallet2025';
   if (!validToken) return next();
   // Check cookie
-  const cookieToken = req.cookies && req.cookies.admin_token;
-  if (cookieToken === validToken) return next();
-  // Check Authorization header
+  if ((req.cookies && req.cookies.admin_token) === validToken) return next();
+  // Check Authorization Bearer token
   const authHeader = req.headers['authorization'] || '';
-  const bearerToken = authHeader.replace('Bearer ', '').trim();
-  if (bearerToken === validToken) return next();
+  if (authHeader.replace('Bearer ', '').trim() === validToken) return next();
+  // Check X-Admin-Password header (used by new dashboard)
+  const pwdHeader = req.headers['x-admin-password'] || '';
+  if (pwdHeader === validPassword) return next();
   // Check query param
   if (req.query && req.query.token === validToken) return next();
-  // Check referer — allow requests coming from /admin pages
+  // Check referer
   const referer = req.headers['referer'] || '';
   if (referer.includes('/admin')) return next();
   res.status(401).json({ success: false, error: 'Unauthorized' });
@@ -567,6 +595,49 @@ function adminEmailHtml(app) {
   </div>
 </div></body></html>`;
 }
+
+
+// POST /api/contact — public
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { firstName, lastName, email, phone, topic, message } = req.body;
+    if (!firstName || !lastName || !email || !topic || !message) {
+      return res.status(400).json({ success: false, error: 'Missing required fields' });
+    }
+    const contact = {
+      id:          'MSG-' + new Date().getFullYear() + '-' + uuidv4().split('-')[0].toUpperCase(),
+      status:      'unread',
+      submittedAt: new Date().toISOString(),
+      firstName, lastName, email, phone: phone || '', topic, message,
+    };
+    await saveContact(contact);
+    console.log('💬 Contact saved:', contact.id, '-', firstName, lastName);
+    res.json({ success: true, id: contact.id });
+  } catch (err) {
+    console.error('Contact error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET /api/contacts — admin
+app.get('/api/contacts', apiAuth, async (req, res) => {
+  try {
+    const contacts = await getAllContacts();
+    res.json({ success: true, total: contacts.length, contacts });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// PATCH /api/contacts/:id/status
+app.patch('/api/contacts/:id/status', apiAuth, async (req, res) => {
+  try {
+    const updated = await updateContactStatus(req.params.id, req.body.status);
+    res.json({ success: true, contact: updated });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 // ---- START ----
 app.listen(PORT, () => {
