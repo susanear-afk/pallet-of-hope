@@ -242,19 +242,22 @@
             </div>
 
             <div class="upload-area" id="uploadArea">
-              <input type="file" id="docUpload" name="documents" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display:none" onchange="handleFileUpload(event)"/>
-              <div class="upload-inner" onclick="document.getElementById('docUpload').click()">
-                <div class="upload-icon">📁</div>
-                <p class="upload-main">Click to upload or drag & drop</p>
-                <p class="upload-sub">PDF, JPG, PNG, DOC — up to 10MB each</p>
-              </div>
+              <label for="docUpload" style="display:block;cursor:pointer;width:100%;height:100%;">
+                <input type="file" id="docUpload" name="documents" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display:none" onchange="handleFileUpload(event)"/>
+                <div class="upload-inner">
+                  <div class="upload-icon">📁</div>
+                  <p class="upload-main">Tap here to upload a document</p>
+                  <p class="upload-sub">PDF, JPG, PNG, DOC — up to 10MB each</p>
+                  <p style="margin-top:10px;font-size:0.82rem;color:#E8621A;font-weight:600;">Works on phone camera too — take a photo of your document!</p>
+                </div>
+              </label>
             </div>
 
             <div id="fileList" class="file-list"></div>
 
-            <div class="self-declare-section">
-              <h3>Don't have a document right now?</h3>
-              <p>You can write a brief self-declaration below instead. By checking the box, you attest that the information you've shared is true to the best of your knowledge.</p>
+            <div class="self-declare-section" style="border:2px solid #E8621A;background:#FFF0E8;">
+              <h3 style="color:#E8621A;">📝 Can't upload a document? No problem!</h3>
+              <p>If you don't have a document handy, you can write a brief self-declaration below instead. Many families qualify this way. By checking the box, you attest that the information you've shared is true to the best of your knowledge.</p>
               <label class="checkbox-label big">
                 <input type="checkbox" id="selfDeclare" name="selfDeclare" onchange="toggleSelfDeclare()"/>
                 I am submitting a self-declaration in lieu of a verification document
