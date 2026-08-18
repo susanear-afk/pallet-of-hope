@@ -438,7 +438,13 @@ async function openModal(id) {
         ${(a.documents||[]).length>0 ? (a.documents||[]).map(d=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream);border-radius:8px;margin-bottom:8px;font-size:0.88rem;">
           <span>${d.mimetype&&d.mimetype.includes('pdf')?'📄':'🖼️'}</span>
           <span style="flex:1;font-weight:500">${d.originalName}</span>
-          ${d.url?`<a href="${d.url}" target="_blank" style="color:var(--orange);font-size:0.85rem;text-decoration:none">View ↗</a>`:''}
+          ${d.url ? (() => {
+                const pdfUrl = d.url.includes('cloudinary') && d.mimetype && d.mimetype.includes('pdf')
+                  ? d.url.replace('/upload/', '/upload/fl_attachment/')
+                  : d.url;
+                return `<a href="${pdfUrl}" target="_blank" download="${d.originalName}" style="color:var(--orange);font-size:0.85rem;text-decoration:none;font-weight:600;">⬇ Download</a>
+                        <a href="${d.url}" target="_blank" style="color:var(--text-light);font-size:0.82rem;text-decoration:none;margin-left:8px;">View ↗</a>`;
+              })() : ''}
         </div>`).join('') : '<p style="color:var(--text-light);font-size:0.9rem">No files uploaded</p>'}
         ${a.declaration&&a.declaration.selfDeclare?`<div class="story-block"><label>Self-Declaration</label><p>${a.declaration.selfDeclareText}</p></div>`:''}
       </div>
