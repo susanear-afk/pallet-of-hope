@@ -4,305 +4,214 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin — The Giving Pallet</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --orange: #E8621A; --orange-pale: #FFF0E8;
-      --dark: #1C1008; --cream: #FDF8F3;
-      --border: #E8DDD5; --text: #2D1F14; --text-light: #7A6558;
-      --green: #2D7A4F; --green-pale: #EBF8F0;
-      --blue: #2B5B8A; --blue-pale: #EBF2FA;
-      --yellow: #9A6B00; --yellow-pale: #FFF8E1;
-      --red: #C53030; --red-pale: #FFF5F5;
-      --radius: 10px; --shadow: 0 2px 12px rgba(28,16,8,0.08);
+      --orange:#E8621A;--orange-pale:#FFF0E8;--dark:#1C1008;--dark-mid:#3D2B1A;
+      --cream:#FDF8F3;--border:#E8DDD5;--text:#2D1F14;--text-light:#7A6558;
+      --green:#2D7A4F;--green-pale:#EBF8F0;--blue:#2B5B8A;--blue-pale:#EBF2FA;
+      --yellow:#9A6B00;--yellow-pale:#FFF8E1;--red:#C53030;--red-pale:#FFF5F5;
+      --radius:10px;--shadow:0 2px 12px rgba(28,16,8,0.08);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: #F5F0EB; color: var(--text); display: flex; min-height: 100vh; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:"DM Sans",sans-serif;background:#F5F0EB;color:var(--text);min-height:100vh;}
 
-    /* SIDEBAR */
-    .sidebar {
-      width: 240px; background: var(--dark); padding: 0; display: flex;
-      flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 10;
-    }
-    .sidebar-logo {
-      padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
-      font-family: 'Playfair Display', serif; font-size: 1rem; color: white;
-    }
-    .sidebar-logo span { color: var(--orange); }
-    .sidebar-logo small { display: block; color: rgba(255,255,255,0.3); font-family: 'DM Sans', sans-serif; font-size: 0.72rem; margin-top: 2px; font-weight: 400; }
-    .sidebar-nav { padding: 16px 0; flex: 1; }
-    .nav-item {
-      display: flex; align-items: center; gap: 12px; padding: 11px 20px;
-      color: rgba(255,255,255,0.5); font-size: 0.9rem; cursor: pointer;
-      transition: all 0.2s; border-left: 3px solid transparent;
-    }
-    .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
-    .nav-item.active { color: white; background: rgba(232,98,26,0.15); border-left-color: var(--orange); }
-    .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
-    .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.08); }
-    .sidebar-footer a { color: rgba(255,255,255,0.3); font-size: 0.8rem; text-decoration: none; }
-    .sidebar-footer a:hover { color: var(--orange); }
+    /* LOGIN */
+    #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--dark);}
+    .login-card{background:white;border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,0.4);}
+    .login-logo{text-align:center;margin-bottom:32px;}
+    .login-logo .icon{font-size:2.5rem;display:block;margin-bottom:10px;}
+    .login-logo h1{font-family:"Playfair Display",serif;font-size:1.5rem;color:var(--dark);}
+    .login-logo h1 span{color:var(--orange);}
+    .login-logo p{font-size:0.85rem;color:var(--text-light);margin-top:6px;}
+    .divider{height:1px;background:var(--border);margin-bottom:28px;}
+    .form-group{margin-bottom:20px;}
+    .form-group label{display:block;font-size:0.85rem;font-weight:600;color:var(--dark);margin-bottom:8px;}
+    .form-group input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:"DM Sans",sans-serif;font-size:1rem;color:var(--dark);outline:none;transition:all 0.2s;}
+    .form-group input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,98,26,0.1);}
+    .login-btn{width:100%;padding:14px;background:var(--orange);color:white;border:none;border-radius:10px;font-family:"DM Sans",sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+    .login-btn:hover{background:#F97B3D;}
+    .login-error{display:none;background:var(--red-pale);border:1px solid #FC8181;color:var(--red);padding:10px 14px;border-radius:8px;font-size:0.85rem;margin-bottom:16px;}
+    .login-error.show{display:block;}
 
-    /* MAIN */
-    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
-    .topbar {
-      background: white; padding: 0 32px; height: 64px; display: flex; align-items: center;
-      justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5;
-    }
-    .topbar h1 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--dark); }
-    .topbar-right { display: flex; align-items: center; gap: 16px; }
-    .refresh-btn {
-      background: none; border: 1.5px solid var(--border); border-radius: 8px;
-      padding: 7px 14px; font-size: 0.85rem; cursor: pointer; color: var(--text-light);
-      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
-    }
-    .refresh-btn:hover { border-color: var(--orange); color: var(--orange); }
-    .content { padding: 32px; flex: 1; }
-
-    /* PANELS */
-    .panel { display: none; }
-    .panel.active { display: block; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* STATS GRID */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
-    .stat-card {
-      background: white; border-radius: var(--radius); padding: 20px 24px;
-      border: 1px solid var(--border); box-shadow: var(--shadow);
-    }
-    .stat-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-light); margin-bottom: 8px; }
-    .stat-value { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--dark); }
-    .stat-card.orange .stat-value { color: var(--orange); }
-    .stat-card.green  .stat-value { color: var(--green); }
-    .stat-card.blue   .stat-value { color: var(--blue); }
-    .stat-card.yellow .stat-value { color: var(--yellow); }
-    .stat-card.red    .stat-value { color: var(--red); }
-
-    /* FILTERS */
-    .filters { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
-    .filter-btn {
-      padding: 7px 16px; border-radius: 100px; font-size: 0.85rem; font-weight: 500;
-      border: 1.5px solid var(--border); background: white; cursor: pointer; color: var(--text-light);
-      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
-    }
-    .filter-btn:hover { border-color: var(--orange); color: var(--orange); }
-    .filter-btn.active { background: var(--orange); color: white; border-color: var(--orange); }
-    .search-input {
-      padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--border);
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text);
-      background: white; width: 220px; outline: none;
-    }
-    .search-input:focus { border-color: var(--orange); }
-
-    /* TABLE */
-    .table-wrap { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
-    table { width: 100%; border-collapse: collapse; }
-    thead th { padding: 12px 16px; text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); background: var(--cream); border-bottom: 1px solid var(--border); }
-    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--cream); }
-    tbody td { padding: 13px 16px; font-size: 0.9rem; color: var(--text); }
-    .cell-name { font-weight: 600; color: var(--dark); }
-    .cell-id { font-size: 0.8rem; color: var(--text-light); font-family: monospace; }
-    .cell-date { font-size: 0.85rem; color: var(--text-light); }
-
-    /* STATUS BADGES */
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
-    .badge-pending    { background: var(--yellow-pale); color: var(--yellow); }
-    .badge-approved   { background: var(--green-pale);  color: var(--green); }
-    .badge-waitlisted { background: var(--blue-pale);   color: var(--blue); }
-    .badge-declined   { background: var(--red-pale);    color: var(--red); }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(28,16,8,0.5);
-      z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: white; border-radius: 16px; width: 100%; max-width: 780px;
-      max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.2);
-      animation: fadeIn 0.25s ease;
-    }
-    .modal-header {
-      padding: 24px 28px; border-bottom: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: flex-start; position: sticky; top: 0; background: white; z-index: 2;
-    }
-    .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--dark); }
-    .modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--text-light); transition: color 0.2s; }
-    .modal-close:hover { color: var(--red); }
-    .modal-body { padding: 28px; }
-    .modal-section { margin-bottom: 28px; }
-    .modal-section h3 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .detail-item label { font-size: 0.78rem; color: var(--text-light); font-weight: 600; display: block; margin-bottom: 2px; }
-    .detail-item p { font-size: 0.92rem; color: var(--dark); }
-    .story-block { background: var(--cream); border-left: 3px solid var(--orange); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 14px; }
-    .story-block label { font-size: 0.78rem; color: var(--text-light); font-weight: 600; display: block; margin-bottom: 6px; }
-    .story-block p { font-size: 0.92rem; color: var(--dark); line-height: 1.7; }
-    .doc-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--cream); border-radius: 8px; margin-bottom: 8px; font-size: 0.88rem; }
-
-    /* STATUS UPDATE */
-    .status-update { background: var(--cream); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); }
-    .status-update h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; color: var(--dark); }
-    .status-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
-    .status-btn {
-      padding: 8px 18px; border-radius: 100px; font-size: 0.85rem; font-weight: 600;
-      border: 2px solid; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
-    }
-    .status-btn.pending    { border-color: var(--yellow); color: var(--yellow); background: white; }
-    .status-btn.approved   { border-color: var(--green);  color: var(--green);  background: white; }
-    .status-btn.waitlisted { border-color: var(--blue);   color: var(--blue);   background: white; }
-    .status-btn.declined   { border-color: var(--red);    color: var(--red);    background: white; }
-    .status-btn.active.pending    { background: var(--yellow-pale); }
-    .status-btn.active.approved   { background: var(--green-pale); }
-    .status-btn.active.waitlisted { background: var(--blue-pale); }
-    .status-btn.active.declined   { background: var(--red-pale); }
-    .notes-input {
-      width: 100%; padding: 10px 14px; border-radius: 8px; border: 1.5px solid var(--border);
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; resize: vertical; min-height: 80px; outline: none;
-    }
-    .notes-input:focus { border-color: var(--orange); }
-    .save-btn {
-      background: var(--orange); color: white; border: none; padding: 10px 24px;
-      border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
-      font-family: 'DM Sans', sans-serif; margin-top: 12px; transition: all 0.2s;
-    }
-    .save-btn:hover { background: #F97B3D; }
-    .save-success { color: var(--green); font-size: 0.85rem; margin-top: 8px; display: none; }
-
-    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
-    .empty-state .ei { font-size: 3rem; margin-bottom: 16px; }
-
-    /* SCORE PANEL */
-    .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .score-item { background: var(--cream); border-radius: 8px; padding: 14px; }
-    .score-item label { font-size: 0.78rem; color: var(--text-light); font-weight: 600; display: block; margin-bottom: 8px; }
-    .score-stars { display: flex; gap: 4px; }
-    .star { font-size: 1.3rem; cursor: pointer; transition: transform 0.1s; }
-    .star:hover { transform: scale(1.2); }
-    .score-total { background: var(--orange-pale); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; margin-top: 16px; }
-    .score-total .score-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--orange); }
-    .score-total .score-max { font-size: 0.85rem; color: var(--text-light); }
+    /* DASHBOARD */
+    #dashScreen{display:none;flex-direction:row;min-height:100vh;}
+    .sidebar{width:240px;background:var(--dark);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:10;}
+    .sidebar-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.08);font-family:"Playfair Display",serif;font-size:1rem;color:white;}
+    .sidebar-logo span{color:var(--orange);}
+    .sidebar-logo small{display:block;color:rgba(255,255,255,0.3);font-family:"DM Sans",sans-serif;font-size:0.72rem;margin-top:2px;font-weight:400;}
+    .sidebar-nav{padding:16px 0;flex:1;}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;color:rgba(255,255,255,0.5);font-size:0.9rem;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
+    .nav-item:hover{color:white;background:rgba(255,255,255,0.05);}
+    .nav-item.active{color:white;background:rgba(232,98,26,0.15);border-left-color:var(--orange);}
+    .sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);}
+    .sidebar-footer a{color:rgba(255,255,255,0.3);font-size:0.8rem;text-decoration:none;}
+    .main{margin-left:240px;flex:1;display:flex;flex-direction:column;}
+    .topbar{background:white;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5;}
+    .topbar h1{font-family:"Playfair Display",serif;font-size:1.2rem;color:var(--dark);}
+    .topbar-right{display:flex;align-items:center;gap:12px;}
+    .refresh-btn{background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 14px;font-size:0.85rem;cursor:pointer;color:var(--text-light);font-family:"DM Sans",sans-serif;transition:all 0.2s;}
+    .refresh-btn:hover{border-color:var(--orange);color:var(--orange);}
+    .signout-btn{background:none;border:1.5px solid #FC8181;border-radius:8px;padding:7px 14px;font-size:0.85rem;cursor:pointer;color:var(--red);font-family:"DM Sans",sans-serif;transition:all 0.2s;}
+    .content{padding:32px;flex:1;}
+    .panel{display:none;}
+    .panel.active{display:block;animation:fadeIn 0.3s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:32px;}
+    .stat-card{background:white;border-radius:var(--radius);padding:20px 24px;border:1px solid var(--border);box-shadow:var(--shadow);}
+    .stat-label{font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;}
+    .stat-value{font-family:"Playfair Display",serif;font-size:2rem;color:var(--dark);}
+    .stat-card.orange .stat-value{color:var(--orange);}
+    .stat-card.green .stat-value{color:var(--green);}
+    .stat-card.blue .stat-value{color:var(--blue);}
+    .stat-card.yellow .stat-value{color:var(--yellow);}
+    .stat-card.red .stat-value{color:var(--red);}
+    .filters{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+    .filter-btn{padding:7px 16px;border-radius:100px;font-size:0.85rem;font-weight:500;border:1.5px solid var(--border);background:white;cursor:pointer;color:var(--text-light);font-family:"DM Sans",sans-serif;transition:all 0.2s;}
+    .filter-btn:hover{border-color:var(--orange);color:var(--orange);}
+    .filter-btn.active{background:var(--orange);color:white;border-color:var(--orange);}
+    .search-input{padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);font-family:"DM Sans",sans-serif;font-size:0.9rem;color:var(--text);background:white;width:220px;outline:none;}
+    .search-input:focus{border-color:var(--orange);}
+    .table-wrap{background:white;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);}
+    table{width:100%;border-collapse:collapse;}
+    thead th{padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);background:var(--cream);border-bottom:1px solid var(--border);}
+    tbody tr{border-bottom:1px solid var(--border);transition:background 0.15s;cursor:pointer;}
+    tbody tr:last-child{border-bottom:none;}
+    tbody tr:hover{background:var(--cream);}
+    tbody td{padding:13px 16px;font-size:0.9rem;color:var(--text);}
+    .cell-name{font-weight:600;color:var(--dark);}
+    .cell-id{font-size:0.8rem;color:var(--text-light);font-family:monospace;}
+    .badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:0.75rem;font-weight:600;}
+    .badge-pending{background:var(--yellow-pale);color:var(--yellow);}
+    .badge-approved{background:var(--green-pale);color:var(--green);}
+    .badge-waitlisted{background:var(--blue-pale);color:var(--blue);}
+    .badge-declined{background:var(--red-pale);color:var(--red);}
+    .modal-overlay{position:fixed;inset:0;background:rgba(28,16,8,0.5);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:white;border-radius:16px;width:100%;max-width:780px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.2);}
+    .modal-header{padding:24px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:white;z-index:2;}
+    .modal-header h2{font-family:"Playfair Display",serif;font-size:1.3rem;color:var(--dark);}
+    .modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-light);}
+    .modal-body{padding:28px;}
+    .modal-section{margin-bottom:28px;}
+    .modal-section h3{font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:6px;}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .detail-item label{font-size:0.78rem;color:var(--text-light);font-weight:600;display:block;margin-bottom:2px;}
+    .detail-item p{font-size:0.92rem;color:var(--dark);}
+    .story-block{background:var(--cream);border-left:3px solid var(--orange);border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:14px;}
+    .story-block label{font-size:0.78rem;color:var(--text-light);font-weight:600;display:block;margin-bottom:6px;}
+    .story-block p{font-size:0.92rem;color:var(--dark);line-height:1.7;}
+    .status-update{background:var(--cream);border-radius:var(--radius);padding:20px;border:1px solid var(--border);}
+    .status-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+    .status-btn{padding:8px 18px;border-radius:100px;font-size:0.85rem;font-weight:600;border:2px solid;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all 0.2s;}
+    .status-btn.pending{border-color:var(--yellow);color:var(--yellow);background:white;}
+    .status-btn.approved{border-color:var(--green);color:var(--green);background:white;}
+    .status-btn.waitlisted{border-color:var(--blue);color:var(--blue);background:white;}
+    .status-btn.declined{border-color:var(--red);color:var(--red);background:white;}
+    .status-btn.sel.pending{background:var(--yellow-pale);}
+    .status-btn.sel.approved{background:var(--green-pale);}
+    .status-btn.sel.waitlisted{background:var(--blue-pale);}
+    .status-btn.sel.declined{background:var(--red-pale);}
+    .notes-input{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--border);font-family:"DM Sans",sans-serif;font-size:0.9rem;resize:vertical;min-height:80px;outline:none;}
+    .save-btn{background:var(--orange);color:white;border:none;padding:10px 24px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:12px;}
+    .save-success{color:var(--green);font-size:0.85rem;margin-top:8px;display:none;}
+    .empty-state{text-align:center;padding:60px 20px;color:var(--text-light);}
+    .loading{text-align:center;padding:40px;color:var(--text-light);}
   </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    🧡 The Giving <span>Pallet</span>
-    <small>Admin Dashboard</small>
-  </div>
-  <nav class="sidebar-nav">
-    <div class="nav-item active" onclick="showPanel('dashboard')">
-      <span class="nav-icon">📊</span> Dashboard
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="icon">🧡</span>
+      <h1>The Giving <span>Pallet</span></h1>
+      <p>Admin Dashboard — Secure Access</p>
     </div>
-    <div class="nav-item" onclick="showPanel('applications')">
-      <span class="nav-icon">📋</span> Applications
+    <div class="divider"></div>
+    <div class="login-error" id="loginError">❌ Incorrect password. Please try again.</div>
+    <div class="form-group">
+      <label>Admin Password</label>
+      <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="current-password"/>
     </div>
-    <div class="nav-item" onclick="showPanel('approved')">
-      <span class="nav-icon">✅</span> Approved
-    </div>
-    <div class="nav-item" onclick="showPanel('waitlist')">
-      <span class="nav-icon">⏳</span> Waitlist
-    </div>
-  </nav>
-  <div class="sidebar-footer">
-    <a href="/" target="_blank">← View Website</a>
-  </div>
-</aside>
-
-<!-- MAIN -->
-<div class="main">
-  <div class="topbar">
-    <h1 id="panelTitle">Dashboard</h1>
-    <div class="topbar-right">
-      <button class="refresh-btn" onclick="loadData()">⟳ Refresh</button>
-      <form method="POST" action="/admin/logout" style="display:inline"><button type="submit" class="refresh-btn" style="color:#C53030;border-color:#FC8181;">Sign Out</button></form>
-    </div>
-  </div>
-
-  <div class="content">
-
-    <!-- DASHBOARD PANEL -->
-    <div class="panel active" id="panel-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-label">Total Applications</div><div class="stat-value" id="stat-total">—</div></div>
-        <div class="stat-card yellow"><div class="stat-label">Pending Review</div><div class="stat-value" id="stat-pending">—</div></div>
-        <div class="stat-card green"><div class="stat-label">Approved</div><div class="stat-value" id="stat-approved">—</div></div>
-        <div class="stat-card blue"><div class="stat-label">Waitlisted</div><div class="stat-value" id="stat-waitlisted">—</div></div>
-        <div class="stat-card red"><div class="stat-label">Declined</div><div class="stat-value" id="stat-declined">—</div></div>
-        <div class="stat-card orange"><div class="stat-label">This Month</div><div class="stat-value" id="stat-month">—</div></div>
-      </div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:16px;color:var(--dark)">Recent Applications</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>Applicant</th><th>Family Type</th><th>Submitted</th><th>Status</th>
-          </tr></thead>
-          <tbody id="recent-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- APPLICATIONS PANEL -->
-    <div class="panel" id="panel-applications">
-      <div class="filters">
-        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
-        <button class="filter-btn" onclick="setFilter('pending', this)">Pending</button>
-        <button class="filter-btn" onclick="setFilter('approved', this)">Approved</button>
-        <button class="filter-btn" onclick="setFilter('waitlisted', this)">Waitlisted</button>
-        <button class="filter-btn" onclick="setFilter('declined', this)">Declined</button>
-        <input class="search-input" type="text" id="searchInput" placeholder="Search name or email…" oninput="renderTable()"/>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>ID</th><th>Applicant</th><th>Location</th><th>Family Type</th><th>Docs</th><th>Submitted</th><th>Status</th>
-          </tr></thead>
-          <tbody id="main-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- APPROVED PANEL -->
-    <div class="panel" id="panel-approved">
-      <p style="color:var(--text-light);margin-bottom:20px;">Families approved to receive a pallet of clothing.</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Applicant</th><th>Email</th><th>Phone</th><th>Location</th><th>Reviewed</th></tr></thead>
-          <tbody id="approved-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- WAITLIST PANEL -->
-    <div class="panel" id="panel-waitlist">
-      <p style="color:var(--text-light);margin-bottom:20px;">Families on the waitlist for the next distribution cycle.</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Applicant</th><th>Email</th><th>Location</th><th>Submitted</th></tr></thead>
-          <tbody id="waitlist-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
+    <button class="login-btn" onclick="doLogin()">Sign In to Dashboard →</button>
   </div>
 </div>
 
-<!-- APPLICATION MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal" id="modal">
-    <div class="modal-header">
-      <div>
-        <h2 id="modalName">Applicant</h2>
-        <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
-          <span class="cell-id" id="modalId"></span>
-          <span class="badge" id="modalBadge"></span>
-        </div>
+<!-- DASHBOARD SCREEN -->
+<div id="dashScreen">
+  <aside class="sidebar">
+    <div class="sidebar-logo">🧡 The Giving <span>Pallet</span><small>Admin Dashboard</small></div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showPanel('dashboard')"><span>📊</span> Dashboard</div>
+      <div class="nav-item" onclick="showPanel('applications')"><span>📋</span> Applications</div>
+      <div class="nav-item" onclick="showPanel('approved')"><span>✅</span> Approved</div>
+      <div class="nav-item" onclick="showPanel('waitlist')"><span>⏳</span> Waitlist</div>
+      <div class="nav-item" id="msg-nav" onclick="showPanel('messages')"><span>💬</span> Messages <span id="msg-badge" style="display:none;background:#E8621A;color:white;border-radius:100px;font-size:0.65rem;padding:1px 6px;margin-left:4px;font-family:Arial,sans-serif;font-weight:700"></span></div>
+    </nav>
+    <div class="sidebar-footer"><a href="/" target="_blank">← View Website</a></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="panelTitle">Dashboard</h1>
+      <div class="topbar-right">
+        <button class="refresh-btn" onclick="loadData()">⟳ Refresh</button>
+        <button class="signout-btn" onclick="doLogout()">Sign Out</button>
       </div>
+    </div>
+    <div class="content">
+
+      <div class="panel active" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="s-total">—</div></div>
+          <div class="stat-card yellow"><div class="stat-label">Pending</div><div class="stat-value" id="s-pending">—</div></div>
+          <div class="stat-card green"><div class="stat-label">Approved</div><div class="stat-value" id="s-approved">—</div></div>
+          <div class="stat-card blue"><div class="stat-label">Waitlisted</div><div class="stat-value" id="s-waitlisted">—</div></div>
+          <div class="stat-card red"><div class="stat-label">Declined</div><div class="stat-value" id="s-declined">—</div></div>
+          <div class="stat-card orange"><div class="stat-label">This Month</div><div class="stat-value" id="s-month">—</div></div>
+        </div>
+        <h2 style="font-family:Playfair Display,serif;font-size:1.2rem;margin-bottom:16px;color:var(--dark)">Recent Applications</h2>
+        <div class="table-wrap"><table><thead><tr><th>Applicant</th><th>Family Type</th><th>Submitted</th><th>Status</th></tr></thead><tbody id="recent-tbody"><tr><td colspan="4" class="loading">Loading...</td></tr></tbody></table></div>
+      </div>
+
+      <div class="panel" id="panel-applications">
+        <div class="filters">
+          <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+          <button class="filter-btn" onclick="setFilter('pending',this)">Pending</button>
+          <button class="filter-btn" onclick="setFilter('approved',this)">Approved</button>
+          <button class="filter-btn" onclick="setFilter('waitlisted',this)">Waitlisted</button>
+          <button class="filter-btn" onclick="setFilter('declined',this)">Declined</button>
+          <input class="search-input" id="searchInput" placeholder="Search name or email…" oninput="renderTable()"/>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Applicant</th><th>Location</th><th>Family Type</th><th>Docs</th><th>Submitted</th><th>Status</th></tr></thead><tbody id="main-tbody"><tr><td colspan="7" class="loading">Loading...</td></tr></tbody></table></div>
+      </div>
+
+      <div class="panel" id="panel-approved">
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Applicant</th><th>Email</th><th>Location</th><th>Approved</th></tr></thead><tbody id="approved-tbody"></tbody></table></div>
+      </div>
+
+      <div class="panel" id="panel-waitlist">
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Applicant</th><th>Email</th><th>Location</th><th>Submitted</th></tr></thead><tbody id="waitlist-tbody"></tbody></table></div>
+      </div>
+
+      <div class="panel" id="panel-messages">
+        <div class="table-wrap"><table>
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Topic</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="messages-tbody"><tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:20px">No messages yet</td></tr></tbody>
+        </table></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div><h2 id="modalName">Applicant</h2><div style="display:flex;gap:10px;align-items:center;margin-top:6px"><span class="cell-id" id="modalId"></span><span class="badge" id="modalBadge"></span></div></div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body" id="modalBody"></div>
@@ -310,362 +219,397 @@
 </div>
 
 <script>
-// ================================
-// ADMIN DASHBOARD JS
-// ================================
-
-const API = '';  // same origin
+// =====================
+// STATE
+// =====================
+let adminPassword = '';
+let adminToken = '';
 let allApplications = [];
+let currentFilter = 'all';
+let currentAppId = null;
+let selectedStatus = null;
 
-// Get admin token from sessionStorage (set on login)
-function getToken() {
-  return sessionStorage.getItem('admin_token') || '';
+// =====================
+// AUTH
+// =====================
+async function doLogin() {
+  const pwd = document.getElementById('passwordInput').value.trim();
+  if (!pwd) return;
+  document.querySelector('.login-btn').textContent = 'Signing in...';
+
+  try {
+    // Send login request
+    const res = await fetch('/admin/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'password=' + encodeURIComponent(pwd),
+      redirect: 'manual'
+    });
+
+    // Whether it redirects or not, try fetching stats with the password as token approach
+    // The server sets a cookie — we also store password locally to use as fallback
+    adminPassword = pwd;
+
+    // Try to load data — if it works, we're in
+    const testRes = await fetch('/api/stats', {
+      credentials: 'include',
+      headers: { 'X-Admin-Password': pwd }
+    });
+
+    if (testRes.ok) {
+      showDashboard();
+      loadData();
+    } else {
+      // Wrong password
+      document.getElementById('loginError').classList.add('show');
+      document.querySelector('.login-btn').textContent = 'Sign In to Dashboard →';
+    }
+  } catch (err) {
+    document.getElementById('loginError').classList.add('show');
+    document.querySelector('.login-btn').textContent = 'Sign In to Dashboard →';
+  }
 }
 
-function authHeaders() {
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + getToken()
-  };
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashScreen').style.display = 'flex';
 }
 
-function authFetch(url, options = {}) {
-  const token = getToken();
-  const separator = url.includes('?') ? '&' : '?';
-  const urlWithToken = token ? url + separator + 'token=' + encodeURIComponent(token) : url;
-  return fetch(urlWithToken, {
+function doLogout() {
+  adminPassword = '';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('dashScreen').style.display = 'none';
+  document.getElementById('passwordInput').value = '';
+}
+
+// Enter key on password field
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+});
+
+// =====================
+// API CALLS
+// =====================
+function apiFetch(url, options = {}) {
+  return fetch(url, {
     ...options,
     credentials: 'include',
     headers: {
       ...(options.headers || {}),
-      'Authorization': 'Bearer ' + token
+      'X-Admin-Password': adminPassword
     }
   });
 }
-let currentFilter = 'all';
-let currentAppId = null;
-let scores = {};
 
+// =====================
+// LOAD DATA
+// =====================
 async function loadData() {
   try {
-    const token = getToken();
-    const [statsRes, appsRes] = await Promise.all([
-      fetch(API + '/api/stats?token=' + token, { credentials: 'include', headers: { 'Authorization': 'Bearer ' + token } }),
-      fetch(API + '/api/applications?token=' + token, { credentials: 'include', headers: { 'Authorization': 'Bearer ' + token } })
+    const [sRes, aRes] = await Promise.all([
+      apiFetch('/api/stats'),
+      apiFetch('/api/applications')
     ]);
-    const statsData = await statsRes.json();
-    const appsData  = await appsRes.json();
 
-    if (statsData.success) {
-      const s = statsData.stats;
-      document.getElementById('stat-total').textContent     = s.total;
-      document.getElementById('stat-pending').textContent   = s.pending;
-      document.getElementById('stat-approved').textContent  = s.approved;
-      document.getElementById('stat-waitlisted').textContent = s.waitlisted;
-      document.getElementById('stat-declined').textContent  = s.declined;
-      document.getElementById('stat-month').textContent     = s.thisMonth;
+    if (sRes.status === 401 || aRes.status === 401) {
+      doLogout();
+      return;
     }
 
-    if (appsData.success) {
-      allApplications = appsData.applications;
-      renderTable();
+    const sData = await sRes.json();
+    const aData = await aRes.json();
+
+    if (sData.success) {
+      const s = sData.stats;
+      document.getElementById('s-total').textContent     = s.total;
+      document.getElementById('s-pending').textContent   = s.pending;
+      document.getElementById('s-approved').textContent  = s.approved;
+      document.getElementById('s-waitlisted').textContent = s.waitlisted;
+      document.getElementById('s-declined').textContent  = s.declined;
+      document.getElementById('s-month').textContent     = s.thisMonth;
+    }
+
+    if (aData.success) {
+      allApplications = aData.applications;
       renderRecent();
+      renderTable();
       renderApproved();
       renderWaitlist();
     }
   } catch (err) {
-    console.error('Failed to load data:', err);
+    console.error('Load error:', err);
   }
 }
 
+// =====================
+// RENDER
+// =====================
 function renderRecent() {
   const tbody = document.getElementById('recent-tbody');
-  const recent = [...allApplications].sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt)).slice(0, 8);
-  if (!recent.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-light)">No applications yet</td></tr>'; return; }
-  tbody.innerHTML = recent.map(a => `
-    <tr onclick="openModal('${a.id}')">
-      <td><div class="cell-name">${a.name}</div><div style="font-size:0.8rem;color:var(--text-light)">${a.email}</div></td>
-      <td>${formatFamilyType(a.familyType)}</td>
-      <td class="cell-date">${formatDate(a.submittedAt)}</td>
-      <td><span class="badge badge-${a.status}">${capitalize(a.status)}</span></td>
-    </tr>`).join('');
+  const recent = [...allApplications].sort((a,b) => new Date(b.submittedAt)-new Date(a.submittedAt)).slice(0,8);
+  if (!recent.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No applications yet</td></tr>'; return; }
+  tbody.innerHTML = recent.map(a => `<tr onclick="openModal('${a.id}')">
+    <td><div class="cell-name">${a.name}</div><div style="font-size:0.8rem;color:var(--text-light)">${a.email}</div></td>
+    <td>${fmt(a.familyType)}</td><td>${fmtDate(a.submittedAt)}</td>
+    <td><span class="badge badge-${a.status}">${cap(a.status)}</span></td></tr>`).join('');
 }
 
 function renderTable() {
   const tbody = document.getElementById('main-tbody');
-  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  let filtered = allApplications.filter(a => {
-    const matchStatus = currentFilter === 'all' || a.status === currentFilter;
-    const matchSearch = !search || a.name.toLowerCase().includes(search) || a.email.toLowerCase().includes(search);
-    return matchStatus && matchSearch;
-  }).sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-
-  if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-light)">No applications found</td></tr>';
-    return;
-  }
-  tbody.innerHTML = filtered.map(a => `
-    <tr onclick="openModal('${a.id}')">
-      <td class="cell-id">${a.id}</td>
-      <td><div class="cell-name">${a.name}</div><div style="font-size:0.8rem;color:var(--text-light)">${a.email}</div></td>
-      <td style="font-size:0.85rem">${a.city}</td>
-      <td style="font-size:0.85rem">${formatFamilyType(a.familyType)}</td>
-      <td style="font-size:0.85rem">📄 ${a.numDocs}</td>
-      <td class="cell-date">${formatDate(a.submittedAt)}</td>
-      <td><span class="badge badge-${a.status}">${capitalize(a.status)}</span></td>
-    </tr>`).join('');
+  const search = (document.getElementById('searchInput')?.value||'').toLowerCase();
+  let list = allApplications.filter(a => {
+    const ms = currentFilter==='all'||a.status===currentFilter;
+    const mq = !search||a.name.toLowerCase().includes(search)||a.email.toLowerCase().includes(search);
+    return ms && mq;
+  }).sort((a,b)=>new Date(b.submittedAt)-new Date(a.submittedAt));
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No applications found</td></tr>'; return; }
+  tbody.innerHTML = list.map(a => `<tr onclick="openModal('${a.id}')">
+    <td class="cell-id">${a.id}</td>
+    <td><div class="cell-name">${a.name}</div><div style="font-size:0.8rem;color:var(--text-light)">${a.email}</div></td>
+    <td>${a.city}</td><td>${fmt(a.familyType)}</td><td>📄 ${a.numDocs}</td>
+    <td>${fmtDate(a.submittedAt)}</td>
+    <td><span class="badge badge-${a.status}">${cap(a.status)}</span></td></tr>`).join('');
 }
 
 function renderApproved() {
   const tbody = document.getElementById('approved-tbody');
-  const apps = allApplications.filter(a => a.status === 'approved').sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-  if (!apps.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-light)">No approved applications yet</td></tr>'; return; }
-  tbody.innerHTML = apps.map(a => `
-    <tr onclick="openModal('${a.id}')">
-      <td class="cell-id">${a.id}</td>
-      <td class="cell-name">${a.name}</td>
-      <td style="font-size:0.85rem">${a.email}</td>
-      <td style="font-size:0.85rem">—</td>
-      <td style="font-size:0.85rem">${a.city}</td>
-      <td class="cell-date">${formatDate(a.submittedAt)}</td>
-    </tr>`).join('');
+  const list = allApplications.filter(a=>a.status==='approved');
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No approved applications yet</td></tr>'; return; }
+  tbody.innerHTML = list.map(a=>`<tr onclick="openModal('${a.id}')"><td class="cell-id">${a.id}</td><td class="cell-name">${a.name}</td><td>${a.email}</td><td>${a.city}</td><td>${fmtDate(a.submittedAt)}</td></tr>`).join('');
 }
 
 function renderWaitlist() {
   const tbody = document.getElementById('waitlist-tbody');
-  const apps = allApplications.filter(a => a.status === 'waitlisted').sort((a,b) => new Date(a.submittedAt) - new Date(b.submittedAt));
-  if (!apps.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-light)">No waitlisted applications</td></tr>'; return; }
-  tbody.innerHTML = apps.map(a => `
-    <tr onclick="openModal('${a.id}')">
-      <td class="cell-id">${a.id}</td>
-      <td class="cell-name">${a.name}</td>
-      <td style="font-size:0.85rem">${a.email}</td>
-      <td style="font-size:0.85rem">${a.city}</td>
-      <td class="cell-date">${formatDate(a.submittedAt)}</td>
-    </tr>`).join('');
+  const list = allApplications.filter(a=>a.status==='waitlisted');
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No waitlisted applications</td></tr>'; return; }
+  tbody.innerHTML = list.map(a=>`<tr onclick="openModal('${a.id}')"><td class="cell-id">${a.id}</td><td class="cell-name">${a.name}</td><td>${a.email}</td><td>${a.city}</td><td>${fmtDate(a.submittedAt)}</td></tr>`).join('');
 }
 
 function setFilter(f, btn) {
   currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderTable();
 }
 
-// ---- MODAL ----
-
+// =====================
+// MODAL
+// =====================
 async function openModal(id) {
   currentAppId = id;
   document.getElementById('modalOverlay').classList.add('open');
   document.getElementById('modalBody').innerHTML = '<p style="padding:20px;color:var(--text-light)">Loading…</p>';
-
   try {
-    const res = await authFetch(API + '/api/applications/' + id);
+    const res = await apiFetch('/api/applications/' + id);
     const data = await res.json();
     if (!data.success) throw new Error(data.error);
     const a = data.application;
-
-    document.getElementById('modalName').textContent = `${a.contact.firstName} ${a.contact.lastName}`;
+    document.getElementById('modalName').textContent = a.contact.firstName + ' ' + a.contact.lastName;
     document.getElementById('modalId').textContent = a.id;
     const badge = document.getElementById('modalBadge');
-    badge.textContent = capitalize(a.status);
-    badge.className = `badge badge-${a.status}`;
-
+    badge.textContent = cap(a.status); badge.className = 'badge badge-' + a.status;
     const benefits = Array.isArray(a.family.benefits) ? a.family.benefits.join(', ') : a.family.benefits || 'None';
-    const sc = scores[id] || { need:0, barriers:0, motivation:0, impact:0 };
-
     document.getElementById('modalBody').innerHTML = `
-
-      <div class="modal-section">
-        <h3>Contact Information</h3>
-        <div class="detail-grid">
-          <div class="detail-item"><label>Full Name</label><p>${a.contact.firstName} ${a.contact.lastName}</p></div>
-          <div class="detail-item"><label>Email</label><p>${a.contact.email}</p></div>
-          <div class="detail-item"><label>Phone</label><p>${a.contact.phone}</p></div>
-          <div class="detail-item"><label>Location</label><p>${a.contact.city}, ${a.contact.zip}</p></div>
-          <div class="detail-item"><label>Submitted</label><p>${formatDate(a.submittedAt, true)}</p></div>
-        </div>
-      </div>
-
-      <div class="modal-section">
-        <h3>Family Information</h3>
-        <div class="detail-grid">
-          <div class="detail-item"><label>Applying As</label><p>${formatFamilyType(a.family.type)}</p></div>
-          <div class="detail-item"><label>Number of Children</label><p>${a.family.numChildren}</p></div>
-          <div class="detail-item"><label>Children's Ages</label><p>${a.family.childrenAges}</p></div>
-          <div class="detail-item"><label>Diagnosis / Special Needs</label><p>${a.family.diagnosisType || 'Not provided'}</p></div>
-          <div class="detail-item"><label>Employment Status</label><p>${a.family.employmentStatus}</p></div>
-          <div class="detail-item"><label>Monthly Income</label><p>$${a.family.monthlyIncome}</p></div>
-          <div class="detail-item" style="grid-column:1/-1"><label>Benefits Received</label><p>${benefits}</p></div>
-        </div>
-      </div>
-
-      <div class="modal-section">
-        <h3>Personal Statement</h3>
-        <div class="story-block"><label>Daily Life & Caregiving</label><p>${a.story.dailyLife}</p></div>
+      <div class="modal-section"><h3>Contact</h3><div class="detail-grid">
+        <div class="detail-item"><label>Name</label><p>${a.contact.firstName} ${a.contact.lastName}</p></div>
+        <div class="detail-item"><label>Email</label><p>${a.contact.email}</p></div>
+        <div class="detail-item"><label>Phone</label><p>${a.contact.phone}</p></div>
+        <div class="detail-item"><label>Location</label><p>${a.contact.city}, ${a.contact.zip}</p></div>
+        <div class="detail-item"><label>Submitted</label><p>${fmtDate(a.submittedAt, true)}</p></div>
+      </div></div>
+      <div class="modal-section"><h3>Family</h3><div class="detail-grid">
+        <div class="detail-item"><label>Type</label><p>${fmt(a.family.type)}</p></div>
+        <div class="detail-item"><label>Children</label><p>${a.family.numChildren} (Ages: ${a.family.childrenAges})</p></div>
+        <div class="detail-item"><label>Diagnosis</label><p>${a.family.diagnosisType||'Not provided'}</p></div>
+        <div class="detail-item"><label>Employment</label><p>${a.family.employmentStatus}</p></div>
+        <div class="detail-item"><label>Monthly Income</label><p>$${a.family.monthlyIncome}</p></div>
+        <div class="detail-item" style="grid-column:1/-1"><label>Benefits</label><p>${benefits}</p></div>
+      </div></div>
+      <div class="modal-section"><h3>Personal Statement</h3>
+        <div class="story-block"><label>Daily Life</label><p>${a.story.dailyLife}</p></div>
         <div class="story-block"><label>Employment Barriers</label><p>${a.story.employmentBarriers}</p></div>
-        <div class="story-block"><label>Why They Want to Resell</label><p>${a.story.resellerWhy}</p></div>
-        <div class="story-block"><label>What a Pallet Would Mean</label><p>${a.story.palletMeaning}</p></div>
-        ${a.story.resellerExperience ? `<div class="story-block"><label>Prior Reselling Experience</label><p>${a.story.resellerExperience}</p></div>` : ''}
+        <div class="story-block"><label>Why Reselling</label><p>${a.story.resellerWhy}</p></div>
+        <div class="story-block"><label>What a Pallet Means</label><p>${a.story.palletMeaning}</p></div>
+        ${a.story.resellerExperience?`<div class="story-block"><label>Prior Experience</label><p>${a.story.resellerExperience}</p></div>`:''}
       </div>
-
-      <div class="modal-section">
-        <h3>Documents (${a.documents.length})</h3>
-        ${a.documents.length > 0
-          ? a.documents.map(d => {
-              const icon = d.mimetype && d.mimetype.includes('pdf') ? '📄' : d.mimetype && d.mimetype.includes('image') ? '🖼️' : '📋';
-              const viewUrl = d.url || (d.savedName ? '/uploads/' + a.id + '/' + d.savedName : null);
-              const sizeKb = d.size ? (d.size/1024).toFixed(0) + ' KB' : '';
-              const storageTag = d.storage === 'cloudinary' ? '<span style="font-size:0.7rem;background:#EBF2FA;color:#2B5B8A;padding:2px 7px;border-radius:10px;margin-left:6px">☁️ Cloud</span>' : '';
-              return \`<div class="doc-item">
-                <span>\${icon}</span>
-                <span style="flex:1;font-weight:500">\${d.originalName}\${storageTag}</span>
-                <span style="color:var(--text-light);font-size:0.8rem">\${sizeKb}</span>
-                \${viewUrl ? \`<a href="\${viewUrl}" target="_blank" style="color:var(--orange);font-size:0.85rem;text-decoration:none">View ↗</a>\` : ''}
-              </div>\`;
-            }).join('')
-          : '<p style="color:var(--text-light);font-size:0.9rem">No files uploaded</p>'}
-        ${a.declaration.selfDeclare ? `
-          <div class="story-block" style="margin-top:12px"><label>Self-Declaration</label><p>${a.declaration.selfDeclareText}</p></div>` : ''}
+      <div class="modal-section"><h3>Documents (${(a.documents||[]).length})</h3>
+        ${(a.documents||[]).length>0 ? (a.documents||[]).map(d=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream);border-radius:8px;margin-bottom:8px;font-size:0.88rem;">
+          <span>${d.mimetype&&d.mimetype.includes('pdf')?'📄':'🖼️'}</span>
+          <span style="flex:1;font-weight:500">${d.originalName}</span>
+          ${d.url?`<a href="${d.url}" target="_blank" style="color:var(--orange);font-size:0.85rem;text-decoration:none">View ↗</a>`:''}
+        </div>`).join('') : '<p style="color:var(--text-light);font-size:0.9rem">No files uploaded</p>'}
+        ${a.declaration&&a.declaration.selfDeclare?`<div class="story-block"><label>Self-Declaration</label><p>${a.declaration.selfDeclareText}</p></div>`:''}
       </div>
-
-      <div class="modal-section">
-        <h3>Scoring Rubric</h3>
-        <div class="score-grid">
-          ${scoreRow('need', 'Level of Financial Need', sc.need)}
-          ${scoreRow('barriers', 'Caregiving Barriers to Employment', sc.barriers)}
-          ${scoreRow('motivation', 'Motivation & Reseller Commitment', sc.motivation)}
-          ${scoreRow('impact', 'Clarity of Impact on Family', sc.impact)}
-        </div>
-        <div class="score-total">
-          <div class="score-num" id="scoreTotal">${sc.need + sc.barriers + sc.motivation + sc.impact}</div>
-          <div class="score-max">out of 20 points</div>
-        </div>
-      </div>
-
-      <div class="modal-section">
-        <h3>Review Decision</h3>
+      <div class="modal-section"><h3>Review Decision</h3>
         <div class="status-update">
           <div class="status-row">
-            ${['pending','approved','waitlisted','declined'].map(s => `
-              <button class="status-btn ${s} ${a.status === s ? 'active' : ''}" id="sbtn-${s}" onclick="selectStatus('${s}')">${capitalize(s)}</button>
-            `).join('')}
+            ${['pending','approved','waitlisted','declined'].map(s=>`<button class="status-btn ${s} ${a.status===s?'sel':''}" id="sbtn-${s}" onclick="selectStatus('${s}')">${cap(s)}</button>`).join('')}
           </div>
           <label style="font-size:0.85rem;font-weight:600;color:var(--dark);display:block;margin-bottom:6px">Review Notes</label>
-          <textarea class="notes-input" id="reviewNotes" placeholder="Add internal notes about this application…">${a.reviewNotes || ''}</textarea>
+          <textarea class="notes-input" id="reviewNotes" placeholder="Add internal notes…">${a.reviewNotes||''}</textarea>
           <button class="save-btn" onclick="saveStatus('${a.id}')">Save Decision</button>
-          <div class="save-success" id="saveSuccess">✅ Decision saved successfully!</div>
+          <div class="save-success" id="saveSuccess">✅ Saved!</div>
         </div>
-      </div>
-    `;
-  } catch (err) {
-    document.getElementById('modalBody').innerHTML = `<p style="color:red;padding:20px">Error loading application: ${err.message}</p>`;
+      </div>`;
+  } catch(err) {
+    document.getElementById('modalBody').innerHTML = `<p style="color:red;padding:20px">Error: ${err.message}</p>`;
   }
 }
 
-function scoreRow(key, label, value) {
-  return `
-    <div class="score-item">
-      <label>${label}</label>
-      <div class="score-stars" id="stars-${key}">
-        ${[1,2,3,4,5].map(i => `<span class="star" onclick="setScore('${key}',${i})">${i <= value ? '⭐' : '☆'}</span>`).join('')}
-      </div>
-    </div>`;
-}
-
-function setScore(key, val) {
-  if (!scores[currentAppId]) scores[currentAppId] = {need:0,barriers:0,motivation:0,impact:0};
-  scores[currentAppId][key] = val;
-  const stars = document.getElementById('stars-' + key);
-  stars.querySelectorAll('.star').forEach((s, i) => { s.textContent = i < val ? '⭐' : '☆'; });
-  const sc = scores[currentAppId];
-  document.getElementById('scoreTotal').textContent = sc.need + sc.barriers + sc.motivation + sc.impact;
-}
-
-let selectedStatus = null;
 function selectStatus(s) {
   selectedStatus = s;
   ['pending','approved','waitlisted','declined'].forEach(st => {
-    const btn = document.getElementById('sbtn-' + st);
-    if (btn) { btn.classList.toggle('active', st === s); }
+    const b = document.getElementById('sbtn-'+st);
+    if (b) { b.classList.toggle('sel', st===s); }
   });
 }
 
 async function saveStatus(id) {
-  const status = selectedStatus || document.querySelector('.status-btn.active')?.classList[1];
-  const notes  = document.getElementById('reviewNotes').value;
+  const status = selectedStatus;
+  const notes = document.getElementById('reviewNotes').value;
   if (!status) return;
   try {
-    const res = await authFetch(API + '/api/applications/' + id + '/status', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status, reviewNotes: notes })
+    const res = await apiFetch('/api/applications/'+id+'/status', {
+      method:'PATCH', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({status, reviewNotes:notes})
     });
     const data = await res.json();
     if (data.success) {
-      const succ = document.getElementById('saveSuccess');
-      succ.style.display = 'block';
-      setTimeout(() => { succ.style.display = 'none'; }, 3000);
-      // Update local data
-      const idx = allApplications.findIndex(a => a.id === id);
-      if (idx !== -1) { allApplications[idx].status = status; }
+      document.getElementById('saveSuccess').style.display='block';
+      setTimeout(()=>{document.getElementById('saveSuccess').style.display='none';},3000);
+      const idx = allApplications.findIndex(a=>a.id===id);
+      if (idx!==-1) allApplications[idx].status=status;
       renderTable(); renderRecent(); renderApproved(); renderWaitlist();
-      // Update badge in modal
-      const badge = document.getElementById('modalBadge');
-      badge.textContent = capitalize(status);
-      badge.className = `badge badge-${status}`;
+      const badge=document.getElementById('modalBadge');
+      badge.textContent=cap(status); badge.className='badge badge-'+status;
     }
-  } catch (err) { alert('Error saving: ' + err.message); }
+  } catch(err){alert('Error: '+err.message);}
 }
 
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  currentAppId = null;
-  selectedStatus = null;
-}
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
-}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); selectedStatus=null; }
+function closeModalOutside(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); }
 
-// ---- PANELS ----
-const panelTitles = { dashboard: 'Dashboard', applications: 'All Applications', approved: 'Approved Families', waitlist: 'Waitlist' };
+// =====================
+// PANELS
+// =====================
+const titles = {dashboard:'Dashboard',applications:'All Applications',approved:'Approved Families',waitlist:'Waitlist',messages:'Messages'};
 function showPanel(name) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
   document.querySelector(`[onclick="showPanel('${name}')"]`).classList.add('active');
-  document.getElementById('panelTitle').textContent = panelTitles[name] || name;
+  document.getElementById('panelTitle').textContent = titles[name]||name;
 }
 
-// ---- UTILS ----
-function formatDate(iso, long = false) {
-  const d = new Date(iso);
-  if (long) return d.toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
-  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+// =====================
+// UTILS
+// =====================
+function fmtDate(iso, long=false) {
+  const d=new Date(iso);
+  if(long) return d.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 }
-function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
-function formatFamilyType(t) {
-  if (!t) return '—';
-  return t.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+function fmt(t){return t?t.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()):'—';}
+
+// =====================
+// MESSAGES
+// =====================
+async function loadMessages() {
+  try {
+    const res = await apiFetch('/api/contacts');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.success) return;
+    renderMessages(data.contacts || []);
+    const unread = (data.contacts||[]).filter(m=>m.status==='unread').length;
+    const badge = document.getElementById('msg-badge');
+    if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? 'inline' : 'none'; }
+  } catch(e) { console.error('Messages error:', e); }
 }
 
-// Init — grab token from URL if present (set after login redirect)
-const urlParams = new URLSearchParams(window.location.search);
-const urlToken  = urlParams.get('auth');
-if (urlToken) {
-  sessionStorage.setItem('admin_token', urlToken);
-  window.history.replaceState({}, document.title, '/admin/index.html');
+function renderMessages(messages) {
+  const tbody = document.getElementById('messages-tbody');
+  if (!tbody) return;
+  if (!messages.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:20px">No messages yet</td></tr>';
+    return;
+  }
+  const topics = {application:'Application',general:'General',media:'Media & Press',donation:'Donation',education:'Reseller Ed',other:'Other'};
+  tbody.innerHTML = messages.map(m => `<tr onclick="viewMessage('${m.id}')">
+    <td style="font-size:0.72rem;font-family:monospace;color:var(--text-muted)">${m.id}</td>
+    <td><div style="font-weight:500">${m.firstName} ${m.lastName}</div></td>
+    <td style="font-size:0.82rem">${m.email}</td>
+    <td style="font-size:0.82rem">${topics[m.topic]||m.topic}</td>
+    <td style="font-size:0.82rem;color:var(--text-muted)">${fmtDate(m.submittedAt)}</td>
+    <td><span class="badge ${m.status==='unread'?'badge-pending':m.status==='replied'?'badge-approved':'badge-waitlisted'}">${cap(m.status)}</span></td>
+    <td><button style="background:#E8621A;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:0.78rem;cursor:pointer;" onclick="event.stopPropagation();viewMessage('${m.id}')">View</button></td>
+  </tr>`).join('');
 }
 
-// If no token in session, check if we came from debug page (same session)
-if (!getToken()) {
-  console.warn('No admin token found — please log in again');
+let currentMessages = [];
+async function viewMessage(id) {
+  try {
+    const res = await apiFetch('/api/contacts');
+    const data = await res.json();
+    currentMessages = data.contacts || [];
+    const m = currentMessages.find(x=>x.id===id);
+    if (!m) return;
+    const topics = {application:'Application Question',general:'General Inquiry',media:'Media & Press',donation:'Donation & Partnership',education:'Reseller Education',other:'Other'};
+    document.getElementById('modalName').textContent = m.firstName + ' ' + m.lastName;
+    document.getElementById('modalId').textContent = m.id;
+    const badge = document.getElementById('modalBadge');
+    badge.textContent = cap(m.status);
+    badge.className = 'badge ' + (m.status==='unread'?'badge-pending':m.status==='replied'?'badge-approved':'badge-waitlisted');
+    document.getElementById('modalBody').innerHTML = `
+      <div class="modal-section"><h3>Contact Details</h3><div class="detail-grid">
+        <div class="detail-item"><label>Name</label><p>${m.firstName} ${m.lastName}</p></div>
+        <div class="detail-item"><label>Email</label><p>${m.email}</p></div>
+        <div class="detail-item"><label>Phone</label><p>${m.phone||'Not provided'}</p></div>
+        <div class="detail-item"><label>Topic</label><p>${topics[m.topic]||m.topic}</p></div>
+        <div class="detail-item"><label>Received</label><p>${fmtDate(m.submittedAt,true)}</p></div>
+      </div></div>
+      <div class="modal-section"><h3>Message</h3>
+        <div class="story-block"><p>${m.message}</p></div>
+      </div>
+      <div class="modal-section"><h3>Actions</h3>
+        <div class="status-update">
+          <div class="status-row">
+            <button class="status-btn pending ${m.status==='unread'?'sel':''}" onclick="updateMsgStatus('${m.id}','unread')">Unread</button>
+            <button class="status-btn waitlisted ${m.status==='read'?'sel':''}" onclick="updateMsgStatus('${m.id}','read')">Read</button>
+            <button class="status-btn approved ${m.status==='replied'?'sel':''}" onclick="updateMsgStatus('${m.id}','replied')">Replied</button>
+          </div>
+          <a href="mailto:${m.email}?subject=Re: Your message to The Giving Pallet" style="display:inline-block;background:#1C1008;color:white;padding:10px 22px;border-radius:8px;text-decoration:none;font-size:0.9rem;margin-top:12px;font-family:DM Sans,sans-serif;">Reply via Email →</a>
+          <div class="save-success" id="saveSuccess">✅ Status updated!</div>
+        </div>
+      </div>`;
+    if (m.status === 'unread') updateMsgStatus(m.id, 'read', true);
+    document.getElementById('modalOverlay').classList.add('open');
+  } catch(e) { console.error(e); }
 }
 
-console.log('Token present:', !!getToken(), '| Length:', getToken().length);
+async function updateMsgStatus(id, status, silent=false) {
+  try {
+    await apiFetch('/api/contacts/'+id+'/status', {
+      method:'PATCH', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({status})
+    });
+    if (!silent) {
+      const el = document.getElementById('saveSuccess');
+      if (el) { el.style.display='block'; setTimeout(()=>el.style.display='none',2000); }
+    }
+    loadMessages();
+  } catch(e) { console.error(e); }
+}
 
+// Load everything
 loadData();
+loadMessages();
 setInterval(loadData, 30000);
+setInterval(loadMessages, 30000);
+
 </script>
 </body>
 </html>
