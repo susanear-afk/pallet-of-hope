@@ -39,12 +39,15 @@
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <div class="logo">
-        <span class="logo-icon">🧡</span>
-        <span class="logo-text">The Giving <strong>Pallet</strong></span>
+  <nav class="navbar" style="height:auto;padding:0;">
+    <div style="text-align:center;padding:18px 24px 10px;border-bottom:1px solid rgba(255,255,255,0.1);">
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;">
+        <span style="font-size:2.4rem;line-height:1;">🧡</span>
+        <span style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#1C1008;letter-spacing:-0.01em;">The Giving <strong style="color:#E8621A;">Pallet</strong></span>
       </div>
+      <p style="font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#7A6558;margin-top:4px;">Foundation</p>
+    </div>
+    <div class="nav-inner" style="justify-content:center;height:52px;">
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
@@ -62,6 +65,36 @@
       <li><a href="apply.html">Apply Now</a></li>
     </ul>
   </nav>
+
+  <!-- SPONSOR BAR — below navbar -->
+  <div style="background:#FDF8F3;border-bottom:3px solid #E8621A;padding:18px 24px;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <p style="text-align:center;font-size:0.7rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#7A6558;font-family:'DM Sans',sans-serif;margin-bottom:16px;">Proudly Sponsored By</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;">
+
+        <!-- SGV Deals — lion prominent -->
+        <a href="https://sgvdeals.com" target="_blank" style="display:flex;align-items:center;gap:16px;text-decoration:none;padding:12px 24px;background:white;border-radius:14px;border:1.5px solid #E8DDD5;box-shadow:0 2px 12px rgba(28,16,8,0.06);">
+          <img src="sgv-deals-logo.jpeg" alt="SGV Deals" style="height:72px;width:auto;object-fit:contain;"/>
+          <div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;color:#1C1008;line-height:1.2;">SGV Deals</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:0.75rem;color:#E8621A;font-weight:600;">sgvdeals.com</div>
+          </div>
+        </a>
+
+        <div style="width:1px;height:48px;background:#E8DDD5;"></div>
+
+        <!-- Lucy's Liquidation -->
+        <a href="https://lucysliquidation.com" target="_blank" style="display:flex;align-items:center;gap:16px;text-decoration:none;padding:12px 24px;background:#1C1008;border-radius:14px;border:1.5px solid #3D2B1A;box-shadow:0 2px 12px rgba(28,16,8,0.12);">
+          <img src="lucys-liquidation-logo.png" alt="Lucy's Liquidation" style="height:56px;width:auto;object-fit:contain;"/>
+          <div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;color:white;line-height:1.2;">Lucy's Liquidation</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:0.75rem;color:#E8621A;font-weight:600;">lucysliquidation.com</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
